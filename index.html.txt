@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>the little bakehouse | הזמנת לחמים</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Arial; background:#faf6f1; margin:0; }
+    header { padding:18px 16px; background:#f1e3d6; border-bottom:1px solid #e8d5c5; }
+    h1 { margin:0; font-size:20px; }
+    .sub { margin-top:6px; color:#4a3a2a; font-size:13px; line-height:1.4; }
+    main { padding:16px; max-width:900px; margin:0 auto; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap:12px; }
+    .card { background:#fff; border:1px solid #eadccc; border-radius:14px; padding:12px; }
+    .name { font-weight:700; }
+    .price { color:#6b4b2a; font-weight:700; margin-top:6px; }
+    .row { display:flex; gap:8px; align-items:center; margin-top:10px; }
+    input[type="number"] { width:86px; padding:10px; border:1px solid #e5d7c7; border-radius:10px; }
+    .section { margin-top:16px; }
+    .box { background:#fff; border:1px solid #eadccc; border-radius:14px; padding:12px; }
+    label { font-size:14px; }
+    input, textarea { font-size:16px; }
+    input[type="text"], input[type="tel"], input[type="date"], textarea {
+      width:100%; padding:10px; border:1px solid #e5d7c7; border-radius:10px;
+    }
+    textarea { min-height:80px; }
+    .muted { color:#6d5a46; font-size:12px; }
+    .total { font-size:18px; font-weight:800; }
+    .btn {
+      width:100%; padding:14px; border:none; border-radius:12px;
+      background:#6b4b2a; color:#fff; font-weight:800; font-size:16px;
+      cursor:pointer;
+    }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+    .chip { background:#fbf3ea; border:1px solid #eadccc; padding:8px 10px; border-radius:999px; }
+    .footer { margin-top:10px; font-size:12px; color:#6d5a46; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>the little bakehouse</h1>
+    <div class="sub">
+      הזמנה יום מראש • אין איסוף ביום ראשון • איסוף מדולב<br>
+      בסוף ההזמנה נשלח אלינו ב־WhatsApp אישור הזמנה מסודר 🙂
+    </div>
+  </header>
+
+  <main>
+    <div class="section">
+      <h2 style="margin:0 0 10px 0;">תפריט</h2>
+      <div id="products" class="grid"></div>
+    </div>
+
+    <div class="section">
+      <div class="box">
+        <h2 style="margin:0 0 10px 0;">תוספות (לבחירה)</h2>
+        <div class="muted">התוספות מיועדות ללחמים. אם תרצי שנחיל אותן רק על פריט מסוים — כתבי בהערות.</div>
+        <div class="chips" id="addons"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="box">
+        <h2 style="margin:0 0 10px 0;">פרטי הזמנה</h2>
+
+        <label>שם מלא</label>
+        <input id="custName" type="text" placeholder="לדוגמה: שוש חדד" />
+
+        <div style="height:10px"></div>
+        <label>טלפון</label>
+        <input id="custPhone" type="tel" placeholder="לדוגמה: 05X-XXXXXXX" />
+
+        <div style="height:10px"></div>
+        <label>תאריך איסוף (לפחות מחר, לא ראשון)</label>
+        <input id="pickupDate" type="date" />
+
+        <div class="footer" id="dateHint"></div>
+
+        <div style="height:10px"></div>
+        <label>הערות</label>
+        <textarea id="notes" placeholder="למשל: לפרוס? בלי קמח מעל? תוספות רק ללחם אחד וכו׳"></textarea>
+
+        <div style="height:12px"></div>
+        <div class="total">סה״כ: <span id="total">₪0</span></div>
+
+        <div style="height:12px"></div>
+        <button id="sendBtn" class="btn" disabled>שלחי הזמנה ב־WhatsApp</button>
+
+        <div class="footer">
+          התשלום וסגירת האיסוף יתואמו בוואטסאפ אחרי שליחת ההזמנה.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

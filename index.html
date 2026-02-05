@@ -6,9 +6,24 @@
   <title>the little bakehouse | הזמנת לחמים</title>
   <style>
     body { font-family: system-ui, -apple-system, Arial; background:#faf6f1; margin:0; }
-    header { padding:18px 16px; background:#f1e3d6; border-bottom:1px solid #e8d5c5; }
+
+    header {
+      padding:18px 16px;
+      background:#f1e3d6;
+      border-bottom:1px solid #e8d5c5;
+      text-align:center;
+    }
+
+    .logo {
+      width: 86px;
+      height: auto;
+      display:block;
+      margin: 0 auto 10px auto;
+    }
+
     h1 { margin:0; font-size:20px; }
     .sub { margin-top:6px; color:#4a3a2a; font-size:13px; line-height:1.4; }
+
     main { padding:16px; max-width:900px; margin:0 auto; }
     .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap:12px; }
     .card { background:#fff; border:1px solid #eadccc; border-radius:14px; padding:12px; }
@@ -16,6 +31,7 @@
     .price { color:#6b4b2a; font-weight:700; margin-top:6px; }
     .row { display:flex; gap:8px; align-items:center; margin-top:10px; }
     input[type="number"] { width:96px; padding:10px; border:1px solid #e5d7c7; border-radius:10px; }
+
     .section { margin-top:16px; }
     .box { background:#fff; border:1px solid #eadccc; border-radius:14px; padding:12px; }
     label { font-size:14px; }
@@ -26,20 +42,30 @@
     textarea { min-height:80px; }
     .muted { color:#6d5a46; font-size:12px; }
     .total { font-size:18px; font-weight:800; }
+
     .btn {
-      width:100%; padding:14px; border:none; border-radius:12px;
-      background:#6b4b2a; color:#fff; font-weight:800; font-size:16px;
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      background:#6b4b2a;
+      color:#fff;
+      font-weight:800;
+      font-size:16px;
       cursor:pointer;
     }
     .btn:disabled { opacity:.5; cursor:not-allowed; }
+
     .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
     .chip { background:#fbf3ea; border:1px solid #eadccc; padding:8px 10px; border-radius:999px; }
     .footer { margin-top:10px; font-size:12px; color:#6d5a46; line-height:1.4; }
     .hint { margin-top:10px; font-size:12px; color:#8a2d2d; font-weight:600; }
   </style>
 </head>
+
 <body>
   <header>
+    <img class="logo" src="Logo.png" alt="the little bakehouse logo" />
     <h1>the little bakehouse</h1>
     <div class="sub">
       הזמנה יום מראש • אין איסוף ביום ראשון • איסוף מדולב<br>
@@ -96,7 +122,7 @@
     </div>
   </main>
 
-  <!-- חשוב: v= מספר לגרסת קאש. בכל שינוי תגדילי את המספר -->
+  <!-- אם את משנה app.js בעתיד, אפשר להגדיל את v כדי לשבור קאש -->
   <script src="app.js?v=1"></script>
 </body>
 </html>

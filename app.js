@@ -193,8 +193,19 @@ function buildOrderText() {
 
 function sendWhatsApp() {
   const text = buildOrderText();
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
-window.location.href = url;
+  const encoded = encodeURIComponent(text);
+
+  // 1) ניסיון לפתוח ישר את אפליקציית וואטסאפ (הכי עובד באייפון)
+  const deep = `whatsapp://send?phone=${WHATSAPP_NUMBER}&text=${encoded}`;
+
+  // 2) נפילה חזרה לקישור הרגיל (אם הדיפ-לינק חסום)
+  const universal = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
+
+  window.location.href = deep;
+
+  setTimeout(() => {
+    window.location.href = universal;
+  }, 600);
 }
 
 // === init ===

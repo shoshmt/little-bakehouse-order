@@ -136,7 +136,7 @@ function selectedAddonsText() {
 }
 
 function validate() {
-  const nameOk = custName.value.trim().length >= 2;
+const nameOk = custName.value.replace(/\s+/g, "").length >= 2;
   const phoneOk = custPhone.value.trim().length >= 7;
   const dateStr = pickupDate.value;
   const dateOk = !!dateStr && dateStr >= pickupDate.min && !isSunday(dateStr);

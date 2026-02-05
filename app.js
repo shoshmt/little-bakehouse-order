@@ -1,9 +1,10 @@
-// === הגדרות ===
-const formHint = document.getElementById("formHint");
-const WHATSAPP_NUMBER = "972509066634"; // 0509066634 -> 972 + בלי 0 בתחילת המספר
+// ======================
+// הגדרות
+// ======================
+const WHATSAPP_NUMBER = "972509066634"; // 0509066634 -> 972 + בלי 0
 
 const PRODUCTS = [
-  // מהתמונה:
+  // לחמים מהמודעה
   { id: "classic", name: "לחם מחמצת קלאסי", price: 40 },
   { id: "onion", name: "לחם מחמצת בצל", price: 45 },
   { id: "cheese_chili", name: "לחם מחמצת גבינה וצ׳ילי", price: 45 },
@@ -11,7 +12,7 @@ const PRODUCTS = [
   { id: "butter_garlic", name: "לחם מחמצת חמאה ושום", price: 45 },
   { id: "cheese_onion", name: "לחם מחמצת גבינה ובצל", price: 45 },
 
-  // גרסאות נוספות שציינת:
+  // תוספות/טעמים שציינת
   { id: "choc_chips", name: "לחם מחמצת שוקולד צ׳יפס", price: 45 },
   { id: "white_choc", name: "לחם מחמצת שוקולד צ׳יפס לבן", price: 45 },
   { id: "cinnamon", name: "לחם מחמצת קינמון", price: 45 },
@@ -23,7 +24,16 @@ const PRODUCTS = [
   { id: "muffin_12", name: "מאפינס שוקולד מחמצת (מארז 12)", price: 120 }
 ];
 
-// === בניית UI ===
+const ADDONS = [
+  { id: "a_choc", label: "שוקולד צ׳יפס" },
+  { id: "a_white", label: "שוקולד צ׳יפס לבן" },
+  { id: "a_cinnamon", label: "קינמון" },
+  { id: "a_garlic_herbs", label: "שום ועשבי תיבול" }
+];
+
+// ======================
+// DOM
+// ======================
 const productsEl = document.getElementById("products");
 const addonsEl = document.getElementById("addons");
 const totalEl = document.getElementById("total");
@@ -34,14 +44,29 @@ const custPhone = document.getElementById("custPhone");
 const pickupDate = document.getElementById("pickupDate");
 const notes = document.getElementById("notes");
 const dateHint = document.getElementById("dateHint");
+const formHint = document.getElementById("formHint");
 
+// מצב
 const qtyById = new Map();
 const addonChecked = new Map();
 
-function currency(n) {
-  return `₪${n}`;
+// ======================
+// helpers
+// ======================
+function currency(n) { return `₪${n}`; }
+
+function isoDate(d) {
+  return d.toISOString().slice(0, 10);
 }
 
+function isSunday(dateStr) {
+  const d = new Date(dateStr + "T00:00:00");
+  return d.getDay() === 0; // 0=Sunday
+}
+
+// ======================
+// UI builders
+// ======================
 function renderProducts() {
   PRODUCTS.forEach(p => {
     qtyById.set(p.id, 0);
@@ -54,17 +79,22 @@ function renderProducts() {
       <div class="price">${currency(p.price)}</div>
       <div class="row">
         <label for="qty_${p.id}">כמות</label>
-        <input id="qty_${p.id}" type="number" min="0" step="1" value="0" />
+        <input id="qty_${p.id}" type="number" min="0" step="1" value="0" inputmode="numeric" />
       </div>
       <div class="muted">*מחיר/מוצר ניתן לעדכון</div>
     `;
 
     const input = card.querySelector(`#qty_${p.id}`);
-    input.addEventListener("input", () => {
+
+    // חשוב: באייפון לפעמים input לא מספיק, לכן גם change
+    const onQtyChange = () => {
       const val = Number(input.value || 0);
       qtyById.set(p.id, Number.isFinite(val) && val >= 0 ? Math.floor(val) : 0);
       updateTotalAndValidation();
-    });
+    };
+
+    input.addEventListener("input", onQtyChange);
+    input.addEventListener("change", onQtyChange);
 
     productsEl.appendChild(card);
   });
@@ -90,16 +120,9 @@ function renderAddons() {
   });
 }
 
-// === תאריך: לפחות מחר, ולא יום ראשון ===
-function isoDate(d) {
-  return d.toISOString().slice(0,10);
-}
-
-function isSunday(dateStr) {
-  const d = new Date(dateStr + "T00:00:00");
-  return d.getDay() === 0; // 0=Sunday
-}
-
+// ======================
+// date picker
+// ======================
 function setupDatePicker() {
   const now = new Date();
   const min = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
@@ -114,6 +137,9 @@ function setupDatePicker() {
   pickupDate.addEventListener("change", updateTotalAndValidation);
 }
 
+// ======================
+// totals + validation
+// ======================
 function calcTotal() {
   let total = 0;
   PRODUCTS.forEach(p => {
@@ -124,7 +150,9 @@ function calcTotal() {
 }
 
 function hasAnyItems() {
-  for (const v of qtyById.values()) if (v > 0) return true;
+  for (const v of qtyById.values()) {
+    if (v > 0) return true;
+  }
   return false;
 }
 
@@ -137,22 +165,28 @@ function selectedAddonsText() {
 }
 
 function validate() {
-const nameOk = custName.value.replace(/\s+/g, "").length >= 2;
+  const nameOk = custName.value.replace(/\s+/g, "").length >= 2; // בלי להיתקע על רווחים
   const phoneOk = custPhone.value.trim().length >= 7;
+
   const dateStr = pickupDate.value;
   const dateOk = !!dateStr && dateStr >= pickupDate.min && !isSunday(dateStr);
+
   const itemsOk = hasAnyItems();
 
-  let msg = "";
-  if (!!dateStr && isSunday(dateStr)) msg = "לא ניתן לבחור יום ראשון. בחרי תאריך אחר.";
-  if (!!dateStr && dateStr < pickupDate.min) msg = "צריך לבחור תאריך של לפחות מחר (הזמנה יום מראש).";
+  // הודעות למשתמש
+  if (!itemsOk) formHint.textContent = "בחרי לפחות פריט אחד להזמנה.";
+  else if (!nameOk) formHint.textContent = "נא למלא שם מלא (לפחות שתי אותיות).";
+  else if (!phoneOk) formHint.textContent = "נא למלא מספר טלפון.";
+  else if (!!dateStr && isSunday(dateStr)) formHint.textContent = "לא ניתן לבחור יום ראשון. בחרי תאריך אחר.";
+  else if (!!dateStr && dateStr < pickupDate.min) formHint.textContent = "צריך לבחור תאריך של לפחות מחר (הזמנה יום מראש).";
+  else if (!dateOk) formHint.textContent = "נא לבחור תאריך איסוף תקין.";
+  else formHint.textContent = "";
 
-  dateHint.textContent = msg || "שימי לב: לא ניתן לבחור יום ראשון, והמערכת מחייבת הזמנה לפחות יום מראש.";
-if (!hasAnyItems()) formHint.textContent = "בחרי לפחות פריט אחד להזמנה.";
-else if (!nameOk) formHint.textContent = "נא למלא שם מלא (לפחות שתי אותיות).";
-else if (!phoneOk) formHint.textContent = "נא למלא מספר טלפון.";
-else if (!dateOk) formHint.textContent = "נא לבחור תאריך איסוף תקין (לפחות מחר, לא יום ראשון).";
-else formHint.textContent = "";
+  // הודעת תאריך קטנה
+  if (!!dateStr && isSunday(dateStr)) dateHint.textContent = "לא ניתן לבחור יום ראשון. בחרי תאריך אחר.";
+  else if (!!dateStr && dateStr < pickupDate.min) dateHint.textContent = "צריך לבחור תאריך של לפחות מחר (הזמנה יום מראש).";
+  else dateHint.textContent = "שימי לב: לא ניתן לבחור יום ראשון, והמערכת מחייבת הזמנה לפחות יום מראש.";
+
   return nameOk && phoneOk && dateOk && itemsOk;
 }
 
@@ -161,6 +195,9 @@ function updateTotalAndValidation() {
   sendBtn.disabled = !validate();
 }
 
+// ======================
+// order building + WhatsApp
+// ======================
 function buildOrderText() {
   const lines = [];
   lines.push("היי! הזמנה חדשה מהאתר 🙂");
@@ -200,24 +237,27 @@ function sendWhatsApp() {
   const text = buildOrderText();
   const encoded = encodeURIComponent(text);
 
-  // 1) ניסיון לפתוח ישר את אפליקציית וואטסאפ (הכי עובד באייפון)
-  const deep = `whatsapp://send?phone=${WHATSAPP_NUMBER}&text=${encoded}`;
+  // קישור תואם מובייל/אייפון
+  const url = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encoded}`;
 
-  // 2) נפילה חזרה לקישור הרגיל (אם הדיפ-לינק חסום)
-  const universal = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
-
-  window.location.href = deep;
-
-  setTimeout(() => {
-    window.location.href = universal;
-  }, 600);
+  // יצירת לינק אמיתי ולחיצה (יותר יציב מ-window.open באייפון)
+  const a = document.createElement("a");
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 
-// === init ===
+// ======================
+// init
+// ======================
 renderProducts();
 renderAddons();
 setupDatePicker();
 updateTotalAndValidation();
 
 [custName, custPhone, notes].forEach(el => el.addEventListener("input", updateTotalAndValidation));
+pickupDate.addEventListener("input", updateTotalAndValidation);
 sendBtn.addEventListener("click", sendWhatsApp);

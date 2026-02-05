@@ -1,4 +1,5 @@
 // === הגדרות ===
+const formHint = document.getElementById("formHint");
 const WHATSAPP_NUMBER = "972509066634"; // 0509066634 -> 972 + בלי 0 בתחילת המספר
 
 const PRODUCTS = [
@@ -147,7 +148,11 @@ const nameOk = custName.value.replace(/\s+/g, "").length >= 2;
   if (!!dateStr && dateStr < pickupDate.min) msg = "צריך לבחור תאריך של לפחות מחר (הזמנה יום מראש).";
 
   dateHint.textContent = msg || "שימי לב: לא ניתן לבחור יום ראשון, והמערכת מחייבת הזמנה לפחות יום מראש.";
-
+if (!hasAnyItems()) formHint.textContent = "בחרי לפחות פריט אחד להזמנה.";
+else if (!nameOk) formHint.textContent = "נא למלא שם מלא (לפחות שתי אותיות).";
+else if (!phoneOk) formHint.textContent = "נא למלא מספר טלפון.";
+else if (!dateOk) formHint.textContent = "נא לבחור תאריך איסוף תקין (לפחות מחר, לא יום ראשון).";
+else formHint.textContent = "";
   return nameOk && phoneOk && dateOk && itemsOk;
 }
 

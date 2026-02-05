@@ -15,7 +15,7 @@
     .name { font-weight:700; }
     .price { color:#6b4b2a; font-weight:700; margin-top:6px; }
     .row { display:flex; gap:8px; align-items:center; margin-top:10px; }
-    input[type="number"] { width:86px; padding:10px; border:1px solid #e5d7c7; border-radius:10px; }
+    input[type="number"] { width:96px; padding:10px; border:1px solid #e5d7c7; border-radius:10px; }
     .section { margin-top:16px; }
     .box { background:#fff; border:1px solid #eadccc; border-radius:14px; padding:12px; }
     label { font-size:14px; }
@@ -34,7 +34,8 @@
     .btn:disabled { opacity:.5; cursor:not-allowed; }
     .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
     .chip { background:#fbf3ea; border:1px solid #eadccc; padding:8px 10px; border-radius:999px; }
-    .footer { margin-top:10px; font-size:12px; color:#6d5a46; }
+    .footer { margin-top:10px; font-size:12px; color:#6d5a46; line-height:1.4; }
+    .hint { margin-top:10px; font-size:12px; color:#8a2d2d; font-weight:600; }
   </style>
 </head>
 <body>
@@ -42,7 +43,7 @@
     <h1>the little bakehouse</h1>
     <div class="sub">
       הזמנה יום מראש • אין איסוף ביום ראשון • איסוף מדולב<br>
-      בסוף ההזמנה נשלח אלינו ב־WhatsApp אישור הזמנה מסודר 🙂
+      בסוף ההזמנה ייפתח WhatsApp עם הודעה מוכנה — לוחצים “שליחה” וההזמנה נקלטת 🙂
     </div>
   </header>
 
@@ -79,14 +80,15 @@
 
         <div style="height:10px"></div>
         <label>הערות</label>
-        <textarea id="notes" placeholder="למשל: לפרוס? בלי קמח מעל? תוספות רק ללחם אחד וכו׳"></textarea>
+        <textarea id="notes" placeholder="למשל: לפרוס? תוספות רק ללחם אחד? וכו׳"></textarea>
 
         <div style="height:12px"></div>
         <div class="total">סה״כ: <span id="total">₪0</span></div>
 
         <div style="height:12px"></div>
         <button id="sendBtn" class="btn" disabled>שלחי הזמנה ב־WhatsApp</button>
-<div class="footer" id="formHint"></div>
+        <div id="formHint" class="hint"></div>
+
         <div class="footer">
           התשלום וסגירת האיסוף יתואמו בוואטסאפ אחרי שליחת ההזמנה.
         </div>
@@ -94,6 +96,7 @@
     </div>
   </main>
 
-<script src="app.js?v=3"></script>
+  <!-- חשוב: v= מספר לגרסת קאש. בכל שינוי תגדילי את המספר -->
+  <script src="app.js?v=1"></script>
 </body>
 </html>

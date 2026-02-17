@@ -13,12 +13,27 @@
       color:#3e2f23;
     }
 
-    header{
-      text-align:center;
-      padding:28px 16px 18px;
-      background:#efe3d5;
-      border-bottom:1px solid #e2d2c0;
-    }
+ header{
+  position:relative;
+  text-align:center;
+  padding:60px 16px 40px;
+  background-image: url("header-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  border-bottom:1px solid #e2d2c0;
+}
+
+header::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(255,248,238,0.65);
+}
+
+header *{
+  position:relative;
+}
+
 
    .logo{
   width:160px;

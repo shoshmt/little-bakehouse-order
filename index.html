@@ -3,222 +3,225 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>The Little Bakehouse | הזמנת לחמים</title>
-
+  <title>The Little Bakehouse | הזמנות</title>
   <style>
-    body {
-      font-family: system-ui, -apple-system, Arial;
-      background: #faf6f1;
-      margin: 0;
+    :root{
+      --bg:#faf6f1;
+      --card:#ffffff;
+      --ink:#1a1a1a;
+      --muted:#6b6b6b;
+      --line:#eadcc9;
+      --brand:#a8743b;
     }
-
-    header {
-      padding: 24px 16px;
-      background: #f1e3d6;
-      border-bottom: 1px solid #e8d5c5;
-      text-align: center;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--bg);
     }
-
-    .logo {
-      width: 130px;
-      height: 130px;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto 14px auto;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    .sub {
-      margin-top: 8px;
-      color: #4a3a2a;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    main {
-      padding: 16px;
-      max-width: 900px;
+    .wrap{
+      max-width: 980px;
+      width: 100%;
       margin: 0 auto;
+      padding: 0 16px 40px;
+    }
+    header{
+      text-align:center;
+      padding: 26px 0 18px;
+      background: #f2e3d6;
+      border-bottom: 1px solid var(--line);
+    }
+    .logo{
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 16px;
+      background:#fff;
+      border: 1px solid var(--line);
+      display:block;
+      margin: 0 auto 10px;
+    }
+    h1{
+      margin: 6px 0 6px;
+      font-size: 26px;
+      line-height: 1.2;
+    }
+    .sub{
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      padding: 0 10px 2px;
+      max-width: 720px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    .section-title{
+      margin: 26px 0 14px;
+      font-size: 22px;
+      font-weight: 800;
+      text-align:right;
+    }
+
+    /* grid responsive – פותר את “חצי אתר” */
+    #products{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    @media (max-width: 900px){
+      #products{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px){
+      #products{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.04);
+      overflow:hidden;
+    }
+    .prod-img{
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid #f0e4d6;
+      margin-bottom: 10px;
+      background:#fff;
+      display:block;
+    }
+    .name{
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .price{
+      color: var(--brand);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top: 8px;
+    }
+    input[type="number"], input[type="text"], textarea, select{
+      width: 170px;
+      max-width: 100%;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 16px;
+      background:#fff;
+    }
+    label{ font-size: 14px; color: var(--muted); }
+    .muted{ color: var(--muted); font-size: 13px; }
+
+    .order-box{
+      margin-top: 22px;
+      background:#fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+    .order-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
-
-    .card {
-      background: #fff;
-      border: 1px solid #eadccc;
-      border-radius: 14px;
-      padding: 12px;
+    @media (max-width: 700px){
+      .order-grid{ grid-template-columns: 1fr; }
     }
-
-    .name {
-      font-weight: 700;
-    }
-
-    .price {
-      color: #6b4b2a;
-      font-weight: 700;
-      margin-top: 6px;
-    }
-
-    .row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-top: 10px;
-    }
-
-    input[type="number"] {
-      width: 96px;
-      padding: 10px;
-      border: 1px solid #e5d7c7;
-      border-radius: 10px;
-    }
-
-    .section {
-      margin-top: 18px;
-    }
-
-    .box {
-      background: #fff;
-      border: 1px solid #eadccc;
-      border-radius: 14px;
-      padding: 14px;
-    }
-
-    label {
-      font-size: 14px;
-    }
-
-    input, textarea {
-      font-size: 16px;
-    }
-
-    input[type="text"],
-    input[type="tel"],
-    input[type="date"],
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #e5d7c7;
-      border-radius: 10px;
-    }
-
-    textarea {
-      min-height: 90px;
-    }
-
-    .total {
+    .full{ grid-column: 1 / -1; }
+    .total{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      font-weight: 900;
       font-size: 18px;
-      font-weight: 800;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
     }
-
-    .btn {
+    button{
       width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: #6b4b2a;
-      color: #fff;
-      font-weight: 800;
+      margin-top: 12px;
+      padding: 14px 16px;
+      border: 0;
+      border-radius: 14px;
+      background: #1f7a4a;
+      color:#fff;
+      font-weight: 900;
       font-size: 16px;
-      cursor: pointer;
+      cursor:pointer;
     }
-
-    .btn:disabled {
-      opacity: .5;
-      cursor: not-allowed;
+    button:disabled{
+      opacity:.5;
+      cursor:not-allowed;
     }
-
-    .footer {
+    #formHint{
       margin-top: 10px;
-      font-size: 12px;
-      color: #6d5a46;
-      line-height: 1.4;
-    }
-
-    .hint {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #8a2d2d;
-      font-weight: 600;
+      color: #b00020;
+      font-weight: 700;
+      min-height: 22px;
     }
   </style>
 </head>
 
 <body>
-
   <header>
-    <!-- לוגו חדש -->
-<img class="logo" src="logo-new.jpg?v=999" alt="The Little Bakehouse logo" />
-
-    <h1>The Little Bakehouse – בית המאפה הקטן בדולב</h1>
-
+    <img class="logo" src="logo-new.jpg?v=1" alt="The Little Bakehouse logo">
+    <h1>בית המאפה הקטן בדולב – The Little Bakehouse</h1>
     <div class="sub">
-      הזמנה יום מראש • אין איסוף ביום ראשון • איסוף מדולב<br>
-      בסיום ההזמנה ייפתח WhatsApp עם הודעה מוכנה לשליחה 🙂
+      הזמנה יום מראש · אין איסוף ביום ראשון · איסוף מדולב<br>
+      בסיום ההזמנה יפתח WhatsApp עם הודעה מוכנה לשליחה 😊
     </div>
   </header>
 
-  <main>
+  <div class="wrap">
+    <div class="section-title">תפריט</div>
+    <div id="products"></div>
 
-    <div class="section">
-      <h2 style="margin:0 0 10px 0;">תפריט</h2>
-      <div id="products" class="grid"></div>
-    </div>
+    <div class="order-box">
+      <div class="section-title" style="margin:0 0 12px; text-align:right;">פרטי הזמנה</div>
 
-    <div class="section">
-      <div class="box">
-        <h2 style="margin:0 0 10px 0;">פרטי הזמנה</h2>
-
-        <label>שם מלא</label>
-        <input id="custName" type="text" placeholder="לדוגמה: שוש חדד" />
-
-        <div style="height:10px"></div>
-
-        <label>טלפון</label>
-        <input id="custPhone" type="tel" placeholder="05X-XXXXXXX" />
-
-        <div style="height:10px"></div>
-
-        <label>תאריך איסוף (לפחות מחר, לא ראשון)</label>
-        <input id="pickupDate" type="date" />
-        <div class="footer" id="dateHint"></div>
-
-        <div style="height:10px"></div>
-
-        <label>הערות</label>
-        <textarea id="notes" placeholder="למשל: לפרוס? טעם למחמצת המתוקה? וכו׳"></textarea>
-
-        <div style="height:12px"></div>
-
-        <div class="total">סה״כ: <span id="total">₪0</span></div>
-
-        <div style="height:12px"></div>
-
-        <button id="sendBtn" class="btn" disabled>
-          שלחי הזמנה ב־WhatsApp
-        </button>
-
-        <div id="formHint" class="hint"></div>
-
-        <div class="footer">
-          התשלום וסגירת האיסוף יתואמו בוואטסאפ לאחר שליחת ההזמנה.
+      <div class="order-grid">
+        <div>
+          <label>שם מלא</label>
+          <input id="custName" type="text" placeholder="לדוגמה: שוש חדד" />
+        </div>
+        <div>
+          <label>טלפון</label>
+          <input id="custPhone" type="text" placeholder="05X-XXXXXXX" />
+        </div>
+        <div class="full">
+          <label>תאריך איסוף (לפחות מחר, לא ראשון)</label>
+          <input id="pickupDate" type="date" />
+          <div id="dateHint" class="muted"></div>
+        </div>
+        <div class="full">
+          <label>הערות</label>
+          <textarea id="notes" rows="3" placeholder="לדוגמה: פרוס/לא פרוס, שעה מועדפת..."></textarea>
         </div>
       </div>
+
+      <div class="total">
+        <div>סה״כ</div>
+        <div id="total">₪0</div>
+      </div>
+
+      <div id="formHint"></div>
+      <button id="sendBtn" disabled>שליחה ב־WhatsApp</button>
     </div>
+  </div>
 
-  </main>
-
-  <!-- חשוב: אם שינית app.js לאחרונה תעלי את המספר -->
-  <script src="app.js?v=7"></script>
-
+  <script src="app.js?v=1"></script>
 </body>
 </html>
+

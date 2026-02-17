@@ -1,138 +1,117 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Little Bakehouse</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Little Bakehouse</title>
 
-<style>
-body {
-  margin: 0;
-  font-family: Georgia, serif;
-  background: #f6efe6;
-  color: #3e2f23;
-}
+  <style>
+    body{
+      margin:0;
+      font-family: Georgia, serif;
+      background:#f6efe6;
+      color:#3e2f23;
+    }
 
-header {
-  text-align: center;
-  padding: 50px 20px 30px;
-  background: #efe3d5;
-}
+    header{
+      text-align:center;
+      padding:28px 16px 18px;
+      background:#efe3d5;
+      border-bottom:1px solid #e2d2c0;
+    }
 
-h1 {
-  margin: 0;
-  font-size: 30px;
-}
+    .logo{
+      width:92px;
+      height:92px;
+      object-fit:cover;
+      border-radius:18px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+      margin:0 auto 12px;
+      display:block;
+      background:#fffaf3;
+    }
 
-.sub {
-  margin-top: 10px;
-  font-style: italic;
-  color: #7a6653;
-}
+    h1{
+      margin:0;
+      font-size:26px;
+      font-weight:700;
+    }
 
-main {
-  max-width: 1000px;
-  margin: auto;
-  padding: 40px 20px;
-}
+    .sub{
+      margin-top:8px;
+      color:#7a6653;
+      font-style:italic;
+      font-size:14px;
+    }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-}
+    main{
+      max-width:1000px;
+      margin:0 auto;
+      padding:22px 16px 60px;
+    }
 
-.card {
-  background: #fffaf3;
-  border-radius: 18px;
-  padding: 20px;
-  border: 1px solid #f0e2d4;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap:18px;
+      margin-top:18px;
+    }
 
-.name {
-  font-weight: bold;
-  margin-bottom: 8px;
-}
+    .card{
+      background:#fffaf3;
+      border:1px solid #f0e2d4;
+      border-radius:18px;
+      padding:16px;
+      box-shadow:0 6px 16px rgba(0,0,0,0.05);
+    }
 
-.price {
-  color: #8c5a2b;
-  margin-bottom: 10px;
-}
+    .card img{
+      width:100%;
+      border-radius:14px;
+      margin-bottom:10px;
+      display:block;
+      box-shadow:0 6px 16px rgba(0,0,0,0.07);
+    }
 
-input {
-  width: 80px;
-  padding: 6px;
-  border-radius: 8px;
-  border: 1px solid #dbc7b5;
-}
+    .name{font-weight:700; margin-bottom:6px;}
+    .price{color:#8c5a2b; font-weight:700; margin-bottom:10px;}
 
-.section {
-  margin-top: 40px;
-}
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
 
-.box {
-  background: #fffaf3;
-  padding: 25px;
-  border-radius: 18px;
-  border: 1px solid #f0e2d4;
-}
+    input[type="number"]{
+      width:90px;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid #dbc7b5;
+      background:#fff;
+      font-family:inherit;
+      font-size:16px;
+      text-align:center;
+    }
 
-textarea, input[type="text"], input[type="tel"], input[type="date"] {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #dbc7b5;
-  margin-top: 8px;
-}
+    .box{
+      margin-top:26px;
+      background:#fffaf3;
+      border:1px solid #f0e2d4;
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 6px 16px rgba(0,0,0,0.05);
+    }
 
-.btn {
-  margin-top: 20px;
-  padding: 14px;
-  width: 100%;
-  background: #7a4b2c;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-}
+    .box h2{margin:0 0 10px 0; font-size:18px;}
 
-.total {
-  margin-top: 15px;
-  font-weight: bold;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <h1>The Little Bakehouse</h1>
-  <div class="sub">Baked slowly, with time and care</div>
-</header>
-
-<main>
-
-<div class="grid" id="products"></div>
-
-<div class="section">
-  <div class="box">
-    <h3>פרטי הזמנה</h3>
-
-    <input type="text" id="custName" placeholder="שם מלא">
-    <input type="tel" id="custPhone" placeholder="טלפון">
-    <input type="date" id="pickupDate">
-
-    <textarea id="notes" placeholder="הערות להזמנה"></textarea>
-
-    <div class="total">סה״כ: <span id="total">₪0</span></div>
-
-    <button class="btn" onclick="sendOrder()">שליחת הזמנה</button>
-  </div>
-</div>
-
-</main>
-
-<script src="app.js"></script>
-</body>
-</html>
+    input[type="text"], input[type="tel"], input[type="date"], textarea{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid #dbc7b5;
+      font-family:inherit;
+      margin-top:10px;
+      font-size:16px;
+      background:#fff;
+      box-sizi

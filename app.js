@@ -20,9 +20,14 @@ const MUFFINS_DEFAULT_IMG = "muffins-default.jpg";
 
 // אפשר לשנות/להוסיף טעמים כאן בקלות
 const MUFFIN_OPTIONS = [
-  { id: "m_reg_choc", group: "regular", label: "שוקולד (עם סוכר)", price: 12, image: "muffin_regular_chocolate.jpg" },
-  { id: "m_reg_apple", group: "regular", label: "תפוח-קינמון (עם סוכר)", price: 12, image: "muffin_regular_apple_cinnamon.jpg" },
-  { id: "m_sf_espresso", group: "sf", label: "וניל-אספרסו (כוסמין ללא סוכר)", price: 15, image: "muffin_sf_espresso_vanilla.jpg" }
+  // עם סוכר (₪12)
+  { id: "m_reg_choc",  group: "regular", label: "שוקולד (עם סוכר)",       price: 12, image: "muffin_regular_chocolate.jpg" },
+  { id: "m_reg_apple", group: "regular", label: "תפוח-קינמון (עם סוכר)",  price: 12, image: "muffin_regular_apple_cinnamon.jpg" },
+
+  // בלי סוכר (₪15)
+  { id: "m_sf_espresso", group: "sf", label: "וניל-אספרסו (בלי סוכר)",     price: 15, image: "muffin_sf_espresso_vanilla.jpg" },
+  { id: "m_sf_choc",     group: "sf", label: "שוקולד (בלי סוכר)",          price: 15, image: "muffins-default.jpg" },
+  { id: "m_sf_apple",    group: "sf", label: "תפוח-קינמון (בלי סוכר)",     price: 15, image: "muffins-default.jpg" }
 ];
 
 const cart = {};

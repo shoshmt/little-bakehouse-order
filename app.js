@@ -135,18 +135,27 @@ function renderProducts() {
       `;
     }
 
-    card.innerHTML = `
-      <div class="name">${p.name}</div>
-      <div class="price">${currency(p.price)}</div>
+ let imageHtml = "";
 
-      <div class="row">
-        <label>כמות</label>
-        <input id="qty_${p.id}" type="number" min="0" step="1" value="0">
-      </div>
+if (p.id === "classic") {
+  imageHtml = `
+    <img src="classic.jpg?v=1"
+         style="width:100%; border-radius:12px; margin-bottom:10px;"
+         alt="לחם מחמצת קלאסי">
+  `;
+}
 
-      ${flourHtml}
-      ${extraHtml}
-    `;
+card.innerHTML = `
+  ${imageHtml}
+  <div class="name">${p.name}</div>
+  <div class="price">${currency(p.price)}</div>
+  <div class="row">
+    <label>כמות</label>
+    <input id="qty_${p.id}" type="number" min="0" step="1" value="0">
+  </div>
+  ${extraHtml}
+`;
+
 
     // כמות
     const input = card.querySelector(`#qty_${p.id}`);

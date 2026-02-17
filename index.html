@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>The Little Bakehouse</title>
+  <title>בית המאפה הקטן בדולב</title>
 
   <style>
     body{
@@ -13,60 +13,42 @@
       color:#3e2f23;
     }
 
-header{
-  text-align:center;
-  padding:60px 16px 40px;
-  background-image: url("header-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-bottom:1px solid #e2d2c0;
-}
-main-title{
-  margin:0;
-  font-size:30px;
-  font-weight:800;
-  letter-spacing:0.5px;
-}
+    header{
+      text-align:center;
+      padding:50px 16px 30px;
+      background:#efe3d5;
+      border-bottom:1px solid #e2d2c0;
+    }
 
-.sub-title{
-  margin-top:6px;
-  font-size:14px;
-  color:#7a6653;
-  font-style:italic;
-}
-
-
-
-   .logo{
-  width:160px;
-  height:160px;
+    .logo{
+      width:150px;
+      height:150px;
       object-fit:cover;
-      border-radius:18px;
+      border-radius:20px;
       box-shadow:0 6px 18px rgba(0,0,0,0.08);
-      margin:0 auto 12px;
+      margin:0 auto 16px;
       display:block;
       background:#fffaf3;
     }
 
-    h1{
+    .main-title{
       margin:0;
-      font-size:26px;
-      font-weight:700;
+      font-size:32px;
+      font-weight:800;
+      letter-spacing:0.5px;
     }
 
-   .sub{
-  margin-top:10px;
-  color:#6b5442;
-  font-size:16px;
-  font-weight:600;
-}
-
+    .sub-title{
+      margin-top:6px;
+      font-size:14px;
+      color:#7a6653;
+      letter-spacing:1px;
+    }
 
     main{
       max-width:1000px;
       margin:0 auto;
-      padding:22px 16px 60px;
+      padding:24px 16px 60px;
     }
 
     .grid{
@@ -122,9 +104,15 @@ main-title{
       box-shadow:0 6px 16px rgba(0,0,0,0.05);
     }
 
-    .box h2{margin:0 0 10px 0; font-size:18px;}
+    .box h2{
+      margin:0 0 10px 0;
+      font-size:18px;
+    }
 
-    input[type="text"], input[type="tel"], input[type="date"], textarea{
+    input[type="text"], 
+    input[type="tel"], 
+    input[type="date"], 
+    textarea{
       width:100%;
       padding:12px;
       border-radius:12px;
@@ -136,7 +124,9 @@ main-title{
       box-sizing:border-box;
     }
 
-    textarea{min-height:90px;}
+    textarea{
+      min-height:90px;
+    }
 
     .total{
       margin-top:14px;
@@ -168,11 +158,11 @@ main-title{
 </head>
 
 <body>
+
   <header>
     <img class="logo" src="logo-new.jpg" alt="The Little Bakehouse logo" />
-<h1 class="main-title">בית המאפה הקטן בדולב</h1>
-<div class="sub-title">The Little Bakehouse</div>
-
+    <h1 class="main-title">בית המאפה הקטן בדולב</h1>
+    <div class="sub-title">The Little Bakehouse</div>
   </header>
 
   <main>
@@ -187,9 +177,13 @@ main-title{
 
       <div class="total">סה״כ: <span id="total">₪0</span></div>
 
-      <button class="btn" id="sendBtn" type="button">שליחת הזמנה ב-WhatsApp</button>
+      <button class="btn" id="sendBtn" type="button">
+        שליחת הזמנה ב-WhatsApp
+      </button>
 
-      <div class="hint">הזמנה יום מראש • אין איסוף ביום ראשון</div>
+      <div class="hint">
+        הזמנה יום מראש • אין איסוף ביום ראשון
+      </div>
     </div>
   </main>
 

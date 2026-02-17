@@ -114,4 +114,65 @@
       margin-top:10px;
       font-size:16px;
       background:#fff;
-      box-sizi
+      box-sizing:border-box;
+    }
+
+    textarea{min-height:90px;}
+
+    .total{
+      margin-top:14px;
+      font-weight:800;
+      font-size:18px;
+    }
+
+    .btn{
+      margin-top:14px;
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:14px;
+      background:#7a4b2c;
+      color:#fff;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    .hint{
+      margin-top:10px;
+      color:#7a6653;
+      font-size:12px;
+      text-align:center;
+      line-height:1.4;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img class="logo" src="logo-new.jpg" alt="The Little Bakehouse logo" />
+    <h1>The Little Bakehouse</h1>
+    <div class="sub">Baked slowly, with time and care</div>
+  </header>
+
+  <main>
+    <div class="grid" id="products"></div>
+
+    <div class="box">
+      <h2>פרטי הזמנה</h2>
+      <input id="custName" type="text" placeholder="שם מלא" />
+      <input id="custPhone" type="tel" placeholder="טלפון" />
+      <input id="pickupDate" type="date" />
+      <textarea id="notes" placeholder="הערות להזמנה"></textarea>
+
+      <div class="total">סה״כ: <span id="total">₪0</span></div>
+
+      <button class="btn" id="sendBtn" type="button">שליחת הזמנה ב-WhatsApp</button>
+
+      <div class="hint">הזמנה יום מראש • אין איסוף ביום ראשון</div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

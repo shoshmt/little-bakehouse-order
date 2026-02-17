@@ -3,201 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>the little bakehouse</title>
+<title>The Little Bakehouse</title>
 
 <style>
-
 body {
   margin: 0;
   font-family: Georgia, serif;
-  background-color: #f6efe6;
-  background-image: radial-gradient(#e9dfd2 1px, transparent 1px);
-  background-size: 18px 18px;
+  background: #f6efe6;
   color: #3e2f23;
 }
 
 header {
   text-align: center;
-  padding: 50px 20px 35px;
+  padding: 50px 20px 30px;
   background: #efe3d5;
-  border-bottom: 1px solid #e2d2c0;
-}
-
-header:after {
-  content: "";
-  width: 80px;
-  height: 2px;
-  background: #c5a88b;
-  display: block;
-  margin: 20px auto 0;
 }
 
 h1 {
-  margin: 10px 0 5px;
+  margin: 0;
   font-size: 30px;
-  letter-spacing: 1px;
 }
 
 .sub {
-  font-size: 14px;
-  color: #7a6653;
-  margin-top: 8px;
+  margin-top: 10px;
   font-style: italic;
+  color: #7a6653;
 }
 
 main {
   max-width: 1000px;
   margin: auto;
-  padding: 40px 20px 60px;
+  padding: 40px 20px;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
 }
 
 .card {
   background: #fffaf3;
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  border-radius: 18px;
+  padding: 20px;
   border: 1px solid #f0e2d4;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .name {
-  font-size: 18px;
   font-weight: bold;
   margin-bottom: 8px;
 }
 
 .price {
   color: #8c5a2b;
-  font-weight: bold;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 }
 
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-input[type="number"] {
+input {
   width: 80px;
-  padding: 8px;
-  border-radius: 12px;
+  padding: 6px;
+  border-radius: 8px;
   border: 1px solid #dbc7b5;
-  background: #fff;
 }
 
 .section {
-  margin-top: 50px;
+  margin-top: 40px;
 }
 
 .box {
   background: #fffaf3;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  padding: 25px;
+  border-radius: 18px;
   border: 1px solid #f0e2d4;
 }
 
-label {
-  font-size: 14px;
-  display: block;
-  margin-bottom: 6px;
-  margin-top: 18px;
-}
-
-input, textarea {
+textarea, input[type="text"], input[type="tel"], input[type="date"] {
   width: 100%;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 10px;
+  border-radius: 10px;
   border: 1px solid #dbc7b5;
-  font-family: inherit;
-}
-
-textarea {
-  min-height: 90px;
-}
-
-.total {
-  font-size: 22px;
-  font-weight: bold;
-  margin-top: 25px;
+  margin-top: 8px;
 }
 
 .btn {
-  margin-top: 25px;
-  padding: 16px;
+  margin-top: 20px;
+  padding: 14px;
   width: 100%;
   background: #7a4b2c;
   color: white;
-  font-size: 16px;
   border: none;
-  border-radius: 16px;
+  border-radius: 12px;
   cursor: pointer;
 }
 
-.btn:hover {
-  background: #5e3720;
+.total {
+  margin-top: 15px;
+  font-weight: bold;
 }
-
-.footer {
-  font-size: 12px;
-  color: #8c7a6a;
-  margin-top: 12px;
-  text-align: center;
-}
-
-img {
-  width: 100%;
-  border-radius: 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.07);
-}
-
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>the little bakehouse</h1>
+  <h1>The Little Bakehouse</h1>
   <div class="sub">Baked slowly, with time and care</div>
 </header>
 
 <main>
 
-<div class="section">
-  <div class="grid" id="products"></div>
-</div>
+<div class="grid" id="products"></div>
 
 <div class="section">
   <div class="box">
-    <h2>פרטי הזמנה</h2>
+    <h3>פרטי הזמנה</h3>
 
-    <label>שם מלא</label>
-    <input type="text" id="custName">
-
-    <label>טלפון</label>
-    <input type="tel" id="custPhone">
-
-    <label>תאריך איסוף (לא ראשון, יום מראש)</label>
+    <input type="text" id="custName" placeholder="שם מלא">
+    <input type="tel" id="custPhone" placeholder="טלפון">
     <input type="date" id="pickupDate">
 
-    <label>הערות להזמנה</label>
-    <textarea id="notes" placeholder="הערות נוספות להזמנה"></textarea>
+    <textarea id="notes" placeholder="הערות להזמנה"></textarea>
 
     <div class="total">סה״כ: <span id="total">₪0</span></div>
 
-    <button class="btn" onclick="sendOrder()">שליחת הזמנה ב-WhatsApp</button>
-
-    <div class="footer">
-      הזמנה תאושר סופית לאחר מענה ב-WhatsApp
-    </div>
-
+    <button class="btn" onclick="sendOrder()">שליחת הזמנה</button>
   </div>
 </div>
 

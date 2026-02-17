@@ -9,33 +9,26 @@ const PRODUCTS = [
   { id: "cheese_onion", name: "לחם מחמצת גבינה ובצל", price: 45 },
   { id: "sweet", name: "לחם מחמצת מתוק", price: 45 },
 
-  { id: "muffin_regular", name: "מאפינס רגיל (עם סוכר)", price: 12, minQty: 4, image: "muffins-default.jpg" },
-  { id: "muffin_spelt_sf", name: "מאפינס כוסמין ללא סוכר", price: 15, minQty: 4, image: "muffins-default.jpg" }
+  { id: "muffin_regular", name: "מאפינס רגיל (עם סוכר)", price: 12 },
+  { id: "muffin_spelt_sf", name: "מאפינס כוסמין ללא סוכר", price: 15 }
 ];
 
 let cart = {};
-let total = 0;
 
 function renderProducts() {
   const container = document.getElementById("products");
-  container.innerHTML = "";
 
-  PRODUCTS.forEach(product => {
-    cart[product.id] = 0;
+  PRODUCTS.forEach(p => {
+    cart[p.id] = 0;
 
     const card = document.createElement("div");
     card.className = "card";
 
     card.innerHTML = `
-      ${product.image ? `<img src="${product.image}">` : ""}
-      <div class="name">${product.name}</div>
-      <div class="price">₪${product.price}</div>
-      <div class="row">
-        <label>כמות</label>
-        <input type="number" min="0" value="0"
-               onchange="updateQty('${product.id}', this.value)">
-      </div>
-      ${product.minQty ? `<div style="font-size:12px;color:#777;">מינימום ${product.minQty} יחידות</div>` : ""}
+      <div class="name">${p.name}</div>
+      <div class="price">₪${p.price}</div>
+      <input type="number" min="0" value="0"
+        onchange="updateQty('${p.id}', this.value)">
     `;
 
     container.appendChild(card);
@@ -43,73 +36,37 @@ function renderProducts() {
 }
 
 function updateQty(id, value) {
-  const product = PRODUCTS.find(p => p.id === id);
-  let qty = parseInt(value) || 0;
-
-  if (product.minQty && qty > 0 && qty < product.minQty) {
-    alert(`המינימום הוא ${product.minQty}`);
-    qty = 0;
-  }
-
-  cart[id] = qty;
+  cart[id] = parseInt(value) || 0;
   calculateTotal();
 }
 
 function calculateTotal() {
-  total = 0;
-  PRODUCTS.forEach(product => {
-    total += (cart[product.id] || 0) * product.price;
+  let total = 0;
+  PRODUCTS.forEach(p => {
+    total += cart[p.id] * p.price;
   });
   document.getElementById("total").innerText = "₪" + total;
 }
 
-function isValidDate(dateStr) {
-  if (!dateStr) return false;
-
-  const selected = new Date(dateStr);
-  const today = new Date();
-  const tomorrow = new Date();
-  tomorrow.setDate(today.getDate() + 1);
-
-  if (selected < tomorrow) return false;
-  if (selected.getDay() === 0) return false;
-
-  return true;
-}
-
 function sendOrder() {
-  const name = document.getElementById("custName").value.trim();
-  const phone = document.getElementById("custPhone").value.trim();
+  const name = document.getElementById("custName").value;
+  const phone = document.getElementById("custPhone").value;
   const date = document.getElementById("pickupDate").value;
-  const notes = document.getElementById("notes").value.trim();
+  const notes = document.getElementById("notes").value;
 
-  if (!name || !phone || !isValidDate(date)) {
-    alert("נא למלא פרטים ולבחור תאריך תקין (לא ראשון ויום מראש)");
-    return;
-  }
+  let message = `הזמנה חדשה:\n\nשם: ${name}\nטלפון: ${phone}\nתאריך: ${date}\n\n`;
 
-  if (total === 0) {
-    alert("נא לבחור מוצרים");
-    return;
-  }
-
-  let message = `היי! הזמנה חדשה 😊\n\n`;
-  message += `שם: ${name}\nטלפון: ${phone}\nתאריך איסוף: ${date}\n\nפריטים:\n`;
-
-  PRODUCTS.forEach(product => {
-    if (cart[product.id] > 0) {
-      message += `- ${product.name} x${cart[product.id]} = ₪${cart[product.id] * product.price}\n`;
+  PRODUCTS.forEach(p => {
+    if (cart[p.id] > 0) {
+      message += `${p.name} x${cart[p.id]}\n`;
     }
   });
 
-  message += `\nסה״כ: ₪${total}\n`;
+  message += `\nסה״כ: ₪${document.getElementById("total").innerText.replace("₪","")}`;
 
-  if (notes) {
-    message += `\nהערות:\n${notes}`;
-  }
+  if (notes) message += `\n\nהערות: ${notes}`;
 
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  window.open(url, "_blank");
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`);
 }
 
 document.addEventListener("DOMContentLoaded", renderProducts);

@@ -4,22 +4,25 @@ const WHATSAPP_NUMBER = "972509066634";
 // מוצרים
 // ======================
 const PRODUCTS = [
-  { id: "classic", name: "לחם מחמצת קלאסי", price: 40 },
-  { id: "onion", name: "לחם מחמצת בצל", price: 45 },
-  { id: "cheese_chili", name: "לחם מחמצת גבינה וצ׳ילי", price: 45 },
-  { id: "cheddar", name: "לחם מחמצת צ׳דר", price: 45 },
-  { id: "butter_garlic", name: "לחם מחמצת חמאה ושום", price: 45 },
-  { id: "cheese_onion", name: "לחם מחמצת גבינה ובצל", price: 45 },
+  { id: "classic", name: "לחם מחמצת קלאסי", price: 40, needsFlour: true },
+  { id: "onion", name: "לחם מחמצת בצל", price: 45, needsFlour: true },
+  { id: "cheese_chili", name: "לחם מחמצת גבינה וצ׳ילי", price: 45, needsFlour: true },
+  { id: "cheddar", name: "לחם מחמצת צ׳דר", price: 45, needsFlour: true },
+  { id: "butter_garlic", name: "לחם מחמצת חמאה ושום", price: 45, needsFlour: true },
+  { id: "cheese_onion", name: "לחם מחמצת גבינה ובצל", price: 45, needsFlour: true },
 
-  // מחמצת מתוקה עם בחירת טעם
-  { id: "sweet", name: "לחם מחמצת מתוקה", price: 45 },
+  // מחמצת מתוקה עם בחירת טעם + בחירת קמח
+  { id: "sweet", name: "לחם מחמצת מתוקה", price: 45, needsFlour: true },
 
-  // חדש: מאפינס כוסמין ללא סוכר (מינ' 4)
+  // מאפינס כוסמין ללא סוכר (מינ' 4)
   { id: "muffin_spelt_sf", name: "מאפינס כוסמין ללא סוכר", price: 15, minQty: 4 },
 
-  // חדש: מאפינס רגיל עם סוכר (מינ' 4)
+  // מאפינס רגיל עם סוכר (מינ' 4)
   { id: "muffin_regular", name: "מאפינס רגיל (עם סוכר)", price: 12, minQty: 4 },
 ];
+
+// בחירת קמח ללחמים
+const FLOUR_OPTIONS = ["קמח לבן", "קמח כוסמין"];
 
 // טעמי מחמצת מתוקה
 const SWEET_OPTIONS = [
@@ -30,16 +33,10 @@ const SWEET_OPTIONS = [
 ];
 
 // טעמי מאפינס כוסמין ללא סוכר
-const MUFFIN_SPELT_SF_OPTIONS = [
-  "אספרסו וניל",
-  "שוקולד",
-];
+const MUFFIN_SPELT_SF_OPTIONS = ["אספרסו וניל", "שוקולד"];
 
 // טעמי מאפינס רגיל
-const MUFFIN_REGULAR_OPTIONS = [
-  "תפוח קינמון",
-  "שוקולד",
-];
+const MUFFIN_REGULAR_OPTIONS = ["תפוח קינמון", "שוקולד"];
 
 // ======================
 // DOM
@@ -55,8 +52,12 @@ const notes = document.getElementById("notes");
 const dateHint = document.getElementById("dateHint");
 const formHint = document.getElementById("formHint");
 
+// ======================
 // state
+// ======================
 const qtyById = new Map();
+const flourById = new Map(); // id -> "קמח לבן" / "קמח כוסמין"
+
 let sweetChoice = "";
 let muffinSpeltChoice = "";
 let muffinRegularChoice = "";
@@ -77,16 +78,29 @@ function isSunday(dateStr) {
 function renderProducts() {
   PRODUCTS.forEach(p => {
     qtyById.set(p.id, 0);
+    flourById.set(p.id, ""); // ברירת מחדל ריק
 
     const card = document.createElement("div");
     card.className = "card";
 
+    // בחירת קמח (רק ללחמים)
+    const flourHtml = p.needsFlour ? `
+      <div style="margin-top:10px">
+        <label>בחרי קמח:</label>
+        <select id="flour_${p.id}" style="width:100%; padding:10px; margin-top:6px; border:1px solid #e5d7c7; border-radius:10px;">
+          <option value="">— בחרי —</option>
+          ${FLOUR_OPTIONS.map(o => `<option value="${o}">${o}</option>`).join("")}
+        </select>
+      </div>
+    ` : "";
+
+    // תוספות/טעמים
     let extraHtml = "";
 
     if (p.id === "sweet") {
       extraHtml = `
         <div style="margin-top:10px">
-          <label>בחרי טעם:</label>
+          <label>בחרי תוספת/טעם למחמצת המתוקה:</label>
           <select id="sweetFlavor" style="width:100%; padding:10px; margin-top:6px; border:1px solid #e5d7c7; border-radius:10px;">
             <option value="">— בחרי —</option>
             ${SWEET_OPTIONS.map(o => `<option value="${o}">${o}</option>`).join("")}
@@ -124,13 +138,17 @@ function renderProducts() {
     card.innerHTML = `
       <div class="name">${p.name}</div>
       <div class="price">${currency(p.price)}</div>
+
       <div class="row">
         <label>כמות</label>
         <input id="qty_${p.id}" type="number" min="0" step="1" value="0">
       </div>
+
+      ${flourHtml}
       ${extraHtml}
     `;
 
+    // כמות
     const input = card.querySelector(`#qty_${p.id}`);
     const onQtyChange = () => {
       const val = Number(input.value || 0);
@@ -140,6 +158,16 @@ function renderProducts() {
     input.addEventListener("input", onQtyChange);
     input.addEventListener("change", onQtyChange);
 
+    // קמח (רק ללחמים)
+    if (p.needsFlour) {
+      const sel = card.querySelector(`#flour_${p.id}`);
+      sel.addEventListener("change", () => {
+        flourById.set(p.id, sel.value);
+        updateTotalAndValidation();
+      });
+    }
+
+    // טעמים
     if (p.id === "sweet") {
       const select = card.querySelector("#sweetFlavor");
       select.addEventListener("change", () => {
@@ -203,8 +231,19 @@ function validateMinQty(productId) {
   const p = PRODUCTS.find(x => x.id === productId);
   const qty = qtyById.get(productId) || 0;
   if (!p || !p.minQty) return true;
-  // אם לא הזמינו בכלל – בסדר. אם הזמינו – חייב להיות >= מינימום
   return qty === 0 || qty >= p.minQty;
+}
+
+function validateFlourForBreads() {
+  // אם הזמינו לחם (qty>0) חייבים לבחור קמח
+  for (const p of PRODUCTS) {
+    if (!p.needsFlour) continue;
+    const qty = qtyById.get(p.id) || 0;
+    if (qty > 0 && !(flourById.get(p.id) || "").trim()) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function validate() {
@@ -215,6 +254,9 @@ function validate() {
   const dateOk = dateStr && dateStr >= pickupDate.min && !isSunday(dateStr);
 
   const itemsOk = hasAnyItems();
+
+  // בחירת קמח ללחמים
+  const flourOk = validateFlourForBreads();
 
   // מחמצת מתוקה: אם כמות > 0 חייבים טעם
   const sweetQty = qtyById.get("sweet") || 0;
@@ -232,7 +274,8 @@ function validate() {
 
   // הודעות שגיאה – לפי סדר הכי הגיוני ללקוחה
   if (!itemsOk) formHint.textContent = "בחרי לפחות פריט אחד.";
-  else if (sweetQty > 0 && !sweetChoice) formHint.textContent = "בחרי טעם למחמצת המתוקה.";
+  else if (!flourOk) formHint.textContent = "בחרי קמח (לבן/כוסמין) לכל לחם שהוזמן 🙂";
+  else if (sweetQty > 0 && !sweetChoice) formHint.textContent = "בחרי תוספת/טעם למחמצת המתוקה.";
   else if (speltQty > 0 && !muffinSpeltChoice) formHint.textContent = "בחרי טעם למאפינס כוסמין ללא סוכר.";
   else if (speltQty > 0 && !speltMinOk) formHint.textContent = "מאפינס כוסמין ללא סוכר: מינימום להזמנה הוא 4 יחידות.";
   else if (regQty > 0 && !muffinRegularChoice) formHint.textContent = "בחרי טעם למאפינס הרגיל.";
@@ -244,6 +287,7 @@ function validate() {
 
   return (
     nameOk && phoneOk && dateOk && itemsOk &&
+    flourOk &&
     sweetOk &&
     speltFlavorOk && speltMinOk &&
     regFlavorOk && regMinOk
@@ -270,14 +314,17 @@ function buildOrderText() {
   PRODUCTS.forEach(p => {
     const q = qtyById.get(p.id) || 0;
     if (q > 0) {
+      const flour = p.needsFlour ? (flourById.get(p.id) || "") : "";
+      const flourTxt = flour ? ` | ${flour}` : "";
+
       if (p.id === "sweet") {
-        lines.push(`- ${p.name} (${sweetChoice}) × ${q}`);
+        lines.push(`- ${p.name}${flourTxt} (${sweetChoice}) × ${q}`);
       } else if (p.id === "muffin_spelt_sf") {
         lines.push(`- ${p.name} (${muffinSpeltChoice}) × ${q}`);
       } else if (p.id === "muffin_regular") {
         lines.push(`- ${p.name} (${muffinRegularChoice}) × ${q}`);
       } else {
-        lines.push(`- ${p.name} × ${q}`);
+        lines.push(`- ${p.name}${flourTxt} × ${q}`);
       }
     }
   });

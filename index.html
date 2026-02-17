@@ -16,17 +16,31 @@
     header{
       position:relative;
       text-align:center;
-      padding:100px 16px 60px;
-      background-image:url("header-bg.jpg");
-      background-size:cover;
-      background-position:center;
-      background-repeat:no-repeat;
+      padding:90px 16px 55px;
+
+      /* רקע תמונה (שימי לב לשם הקובץ!) */
+      background: url("./header-bg.jpg") center/cover no-repeat;
+
       border-bottom:1px solid #e2d2c0;
     }
 
-  
+    /* שכבת ריכוך כדי שהטקסט יהיה קריא */
+    header::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:rgba(255,248,238,0.65);
+    }
+
     header *{
       position:relative;
+    }
+
+    .main-title{
+      margin:0 0 20px 0; /* מרווח מתחת לכותרת */
+      font-size:48px;
+      font-weight:900;
+      line-height:1.1;
     }
 
     .logo{
@@ -35,20 +49,13 @@
       object-fit:cover;
       border-radius:28px;
       box-shadow:0 10px 28px rgba(0,0,0,0.15);
-      margin:0 auto 24px;
+      margin:0 auto 18px;
       display:block;
       background:#fffaf3;
     }
 
-    .main-title{
-      margin:0;
-      font-size:48px;
-      font-weight:900;
-      line-height:1.1;
-    }
-
     .sub-title{
-      margin-top:10px;
+      margin-top:6px;
       font-size:16px;
       letter-spacing:2px;
       color:#6b5442;
@@ -127,9 +134,9 @@
       font-size:20px;
     }
 
-    input[type="text"], 
-    input[type="tel"], 
-    input[type="date"], 
+    input[type="text"],
+    input[type="tel"],
+    input[type="date"],
     textarea{
       width:100%;
       padding:14px;
@@ -182,12 +189,14 @@
 
 <body>
 
-<header>
-  <h1 class="main-title">בית המאפה הקטן בדולב</h1>
-  <img class="logo" src="logo-new.jpg" alt="The Little Bakehouse logo" />
-  <div class="sub-title">The Little Bakehouse</div>
-</header>
+  <header>
+    <!-- עברית מעל הלוגו -->
+    <h1 class="main-title">בית המאפה הקטן בדולב</h1>
 
+    <img class="logo" src="logo-new.jpg" alt="The Little Bakehouse logo" />
+
+    <div class="sub-title">The Little Bakehouse</div>
+  </header>
 
   <main>
     <div class="grid" id="products"></div>
@@ -202,13 +211,9 @@
 
       <div class="total">סה״כ: <span id="total">₪0</span></div>
 
-      <button class="btn" id="sendBtn" type="button">
-        שליחת הזמנה ב-WhatsApp
-      </button>
+      <button class="btn" id="sendBtn" type="button">שליחת הזמנה ב-WhatsApp</button>
 
-      <div class="hint">
-        הזמנה יום מראש • אין איסוף ביום ראשון
-      </div>
+      <div class="hint">הזמנה יום מראש • אין איסוף ביום ראשון</div>
     </div>
   </main>
 

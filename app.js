@@ -62,14 +62,16 @@ const IMAGE_BY_PRODUCT_ID = {
 };
 
 // תמונות למאפינס לפי טעם
+// שימי לב: אלה השמות *בדיוק* כמו אצלך בגיטהאב
 const IMAGE_BY_MUFFIN_CHOICE = {
   muffin_spelt_sf: {
     "אספרסו וניל": "muffin_sf_espresso_vanilla.jpg",
-    // אם תרצי גם תמונה לשוקולד ללא סוכר, תשמרי בשם הזה או נעדכן:
+    // כרגע אין אצלך תמונה לשוקולד ללא סוכר – אז לא יציג
     "שוקולד": "",
   },
   muffin_regular: {
     "שוקולד": "muffin_regular_chocolate.jpg",
+    // כרגע אין אצלך תפוח קינמון – אז לא יציג
     "תפוח קינמון": "",
   },
 };
@@ -89,7 +91,7 @@ const formHint = document.getElementById("formHint");
 
 // state
 const qtyById = new Map();
-const flourById = new Map(); // לכל לחם: קמח לבן/כוסמין
+const flourById = new Map();
 let sweetChoice = "";
 let muffinSpeltChoice = "";
 let muffinRegularChoice = "";
@@ -104,10 +106,10 @@ function isSunday(dateStr) {
   return d.getDay() === 0;
 }
 
-// מוסיף cache-bust קטן כדי שגיטהאב/דפדפן יעדכנו תמונות
+// נתיב תמונה יציב (עם ./) + cache-bust קבוע
 function imgSrc(fileName) {
   if (!fileName) return "";
-  return `${fileName}?v=${Date.now()}`;
+  return `./${fileName}?v=2`;
 }
 
 // ======================
@@ -123,17 +125,15 @@ function renderProducts() {
     const card = document.createElement("div");
     card.className = "card";
 
-    // תמונה למוצר (אם קיימת)
     const productImg = IMAGE_BY_PRODUCT_ID[p.id] ? `
       <img
+        class="prod-img"
         src="${imgSrc(IMAGE_BY_PRODUCT_ID[p.id])}"
         alt="${p.name}"
-        style="width:100%; height:170px; object-fit:cover; border-radius:14px; margin-bottom:10px;"
         onerror="this.style.display='none';"
       />
     ` : "";
 
-    // בחירת קמח לכל לחם
     let flourHtml = "";
     if (p.type === "bread" || p.type === "bread_sweet") {
       flourHtml = `
@@ -146,7 +146,6 @@ function renderProducts() {
       `;
     }
 
-    // תוספות (טעמים) למתוקה / מאפינס
     let extraHtml = "";
 
     if (p.id === "sweet") {
@@ -214,7 +213,7 @@ function renderProducts() {
     qtyInput.addEventListener("input", onQtyChange);
     qtyInput.addEventListener("change", onQtyChange);
 
-    // קמח (ללחמים)
+    // קמח
     if (p.type === "bread" || p.type === "bread_sweet") {
       const flourSelect = card.querySelector(`#flour_${p.id}`);
       flourSelect.addEventListener("change", () => {
@@ -242,9 +241,9 @@ function renderProducts() {
         if (!file) { imgWrap.innerHTML = ""; return; }
         imgWrap.innerHTML = `
           <img
+            class="prod-img"
             src="${imgSrc(file)}"
             alt="מאפינס כוסמין ללא סוכר - ${muffinSpeltChoice}"
-            style="width:100%; height:170px; object-fit:cover; border-radius:14px;"
             onerror="this.style.display='none';"
           />
         `;
@@ -269,9 +268,9 @@ function renderProducts() {
         if (!file) { imgWrap.innerHTML = ""; return; }
         imgWrap.innerHTML = `
           <img
+            class="prod-img"
             src="${imgSrc(file)}"
             alt="מאפינס רגיל - ${muffinRegularChoice}"
-            style="width:100%; height:170px; object-fit:cover; border-radius:14px;"
             onerror="this.style.display='none';"
           />
         `;
@@ -329,7 +328,6 @@ function validateMinQty(productId) {
 }
 
 function validateFlourSelection() {
-  // לכל לחם שהוזמן כמות>0 חייבים לבחור קמח
   for (const p of PRODUCTS) {
     if (p.type === "bread" || p.type === "bread_sweet") {
       const q = qtyById.get(p.id) || 0;
@@ -351,24 +349,19 @@ function validate() {
 
   const itemsOk = hasAnyItems();
 
-  // קמח חובה ללחמים
   const flourCheck = validateFlourSelection();
 
-  // מחמצת מתוקה: אם כמות > 0 חייבים טעם
   const sweetQty = qtyById.get("sweet") || 0;
   const sweetOk = sweetQty === 0 || !!sweetChoice;
 
-  // מאפינס כוסמין ללא סוכר: אם כמות > 0 חייבים טעם + מינימום 4
   const speltQty = qtyById.get("muffin_spelt_sf") || 0;
   const speltFlavorOk = speltQty === 0 || !!muffinSpeltChoice;
   const speltMinOk = validateMinQty("muffin_spelt_sf");
 
-  // מאפינס רגיל: אם כמות > 0 חייבים טעם + מינימום 4
   const regQty = qtyById.get("muffin_regular") || 0;
   const regFlavorOk = regQty === 0 || !!muffinRegularChoice;
   const regMinOk = validateMinQty("muffin_regular");
 
-  // הודעות שגיאה
   if (!itemsOk) formHint.textContent = "בחרי לפחות פריט אחד.";
   else if (!flourCheck.ok) formHint.textContent = `בחרי קמח עבור: ${flourCheck.productName}`;
   else if (sweetQty > 0 && !sweetChoice) formHint.textContent = "בחרי טעם למחמצת המתוקה.";
@@ -411,7 +404,6 @@ function buildOrderText() {
     const q = qtyById.get(p.id) || 0;
     if (q <= 0) return;
 
-    // תוספת קמח ללחמים
     const flourPart = (p.type === "bread" || p.type === "bread_sweet")
       ? ` (${flourById.get(p.id) || ""})`
       : "";

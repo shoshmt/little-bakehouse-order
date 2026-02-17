@@ -66,16 +66,14 @@ const IMAGE_BY_PRODUCT_ID = {
 const IMAGE_BY_MUFFIN_CHOICE = {
   muffin_spelt_sf: {
     "אספרסו וניל": "muffin_sf_espresso_vanilla.jpg",
-    // כרגע אין אצלך תמונה לשוקולד ללא סוכר – אז לא יציג
-    "שוקולד": "",
+    // שוקולד ללא סוכר ישתמש באותה תמונה של השוקולד הרגיל
+    "שוקולד": "muffin_regular_chocolate.jpg",
   },
   muffin_regular: {
     "שוקולד": "muffin_regular_chocolate.jpg",
-    // כרגע אין אצלך תפוח קינמון – אז לא יציג
-    "תפוח קינמון": "",
+    "תפוח קינמון": "muffin_regular_apple_cinnamon.jpg",
   },
 };
-
 // ======================
 // DOM
 // ======================

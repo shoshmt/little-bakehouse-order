@@ -206,6 +206,45 @@ input, textarea{
   color:#6b2d1a;
   display:none;
 }
+
+/* WORKSHOPS */
+.section-title{
+  margin:48px 0 10px;
+  text-align:center;
+  font-size:34px;
+  font-weight:600;
+  color:#6a3d1f;
+}
+
+.section-desc{
+  max-width:720px;
+  margin:0 auto 18px;
+  text-align:center;
+  color:#6b5442;
+  line-height:1.7;
+  font-size:16px;
+}
+
+.ws-note{
+  margin-top:10px;
+  font-size:13px;
+  color:#7a6653;
+  line-height:1.6;
+}
+
+.ws-btn{
+  margin-top:14px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  background:#6a3d1f;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.ws-btn:hover{ background:#5a3219; }
 </style>
 </head>
 
@@ -226,8 +265,19 @@ input, textarea{
 </header>
 
 <main>
+  <!-- מוצרי מאפה -->
   <div class="grid" id="products"></div>
 
+  <!-- סדנאות -->
+  <div class="section-title">סדנאות מחמצת</div>
+  <div class="section-desc">
+    סדנאות אינטימיות ומלאות אווירה, עם ליווי צמוד ותכל׳ס של מחמצת: מהבסיס ועד התוצאה.
+    נלמד על תהליך המחמצת, נכין כיכר לחם מחמצת, ונכין יחד פיצות מחמצת בטאבון.
+    <div class="ws-note">הזמנה לפחות שבוע מראש • ההרשמה היא בקשה — תקבלי אישור סופי בהודעת WhatsApp חוזרת.</div>
+  </div>
+  <div class="grid" id="workshops"></div>
+
+  <!-- פרטי הזמנה -->
   <div class="box">
     <h2>פרטי הזמנה</h2>
 
@@ -253,6 +303,6 @@ input, textarea{
   </div>
 </main>
 
-<script src="app.js?v=2"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>

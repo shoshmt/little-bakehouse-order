@@ -16,8 +16,8 @@ const PRODUCTS = [
 /* =======================
    2) מאפינס — 2 קבוצות דיפולט עם פתיחה
    ======================= */
-const MUFFIN_IMG_WITH_SUGAR = "muffins-default.jpg";
-const MUFFIN_IMG_NO_SUGAR   = "muffins-default.jpg";
+const MUFFIN_IMG_WITH_SUGAR = "muffins-with-sugar.jpg";
+const MUFFIN_IMG_NO_SUGAR   = "muffins-no-sugar.jpg";
 
 const MUFFIN_GROUPS = [
   {

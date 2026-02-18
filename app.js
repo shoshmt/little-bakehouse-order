@@ -1,6 +1,6 @@
 const WHATSAPP_NUMBER = "972509066634";
 
-/* ========= לחמים (₪45) + תמונות לפי השמות אצלך ========= */
+/* ========= לחמים (₪45) ========= */
 const BREADS = [
   { id:"classic",       name:"לחם מחמצת קלאסי",        price:45, img:"classic.jpg" },
   { id:"onion",         name:"לחם מחמצת בצל",          price:45, img:"onion.jpg" },
@@ -11,7 +11,7 @@ const BREADS = [
   { id:"sweet",         name:"לחם מחמצת מתוק",         price:45, img:"sweet.jpg" },
 ];
 
-/* ========= מיקס לחמניות (₪45) + בחירת קמח ========= */
+/* ========= מיקס לחמניות ========= */
 const ROLLS_MIX = {
   id: "rolls_mix",
   name: "מיקס לחמניות מחמצת (קלאסי, שום, צ׳דר, בצל)",
@@ -21,15 +21,15 @@ const ROLLS_MIX = {
 let rollsMixQty = 0;
 let rollsMixFlour = "";
 
-/* ========= מאפינס: כרטיס אחד עם בחירת טעם + תמונת ברירת מחדל ========= */
+/* ========= מאפינס ========= */
 const MUFFINS_DEFAULT_IMG = "muffins-default.jpg";
 
 const MUFFIN_OPTIONS = [
-  { id:"m_reg_choc",   label:"מאפינס שוקולד (עם סוכר)",        price:12, img:"muffin_regular_chocolate.jpg" },
-  { id:"m_reg_apple",  label:"מאפינס תפוח קינמון (עם סוכר)",    price:12, img:"muffin_regular_apple_cinnamon.jpg" },
-  { id:"m_sf_espresso",label:"מאפינס וניל-אספרסו (בלי סוכר)",    price:15, img:"muffin_sf_espresso_vanilla.jpg" },
-  { id:"m_sf_choc",    label:"מאפינס שוקולד (בלי סוכר)",        price:15, img:MUFFINS_DEFAULT_IMG },
-  { id:"m_sf_apple",   label:"מאפינס תפוח קינמון (בלי סוכר)",   price:15, img:MUFFINS_DEFAULT_IMG },
+  { id:"m_reg_choc",    label:"מאפינס שוקולד (עם סוכר)",        price:12, img:"muffin_regular_chocolate.jpg" },
+  { id:"m_reg_apple",   label:"מאפינס תפוח קינמון (עם סוכר)",    price:12, img:"muffin_regular_apple_cinnamon.jpg" },
+  { id:"m_sf_espresso", label:"מאפינס וניל-אספרסו (בלי סוכר)",    price:15, img:"muffin_sf_espresso_vanilla.jpg" },
+  { id:"m_sf_choc",     label:"מאפינס שוקולד (בלי סוכר)",        price:15, img:MUFFINS_DEFAULT_IMG },
+  { id:"m_sf_apple",    label:"מאפינס תפוח קינמון (בלי סוכר)",   price:15, img:MUFFINS_DEFAULT_IMG },
 ];
 
 const cart = {}; // id -> qty
@@ -37,7 +37,7 @@ let total = 0;
 
 function currency(n){ return `₪${n}`; }
 
-/* ========= תאריך: מינימום יום מראש (לא חוסמים ראשון כאן) ========= */
+/* ========= תאריך: מינימום יום מראש ========= */
 function isoDate(d){
   const y = d.getFullYear();
   const m = String(d.getMonth()+1).padStart(2,'0');
@@ -78,7 +78,7 @@ function updatePickupNote(){
   }
 }
 
-/* ========= חוק חכם: דולב + יום ראשון + יש לחם/מיקס לחמניות => חסימה ========= */
+/* ========= חוק חכם: דולב + ראשון + יש לחם/מיקס לחמניות => חסימה ========= */
 function isSundayISO(dateStr){
   if(!dateStr) return false;
   const d = new Date(dateStr + "T00:00:00");
@@ -103,8 +103,7 @@ function updatePickupRulesUI(){
   if(isDolev && sunday && hasBread){
     msgEl.style.display = "block";
     msgEl.textContent =
-      "שימי לב: בדולב אין איסוף לחמים/לחמניות ביום ראשון. " +
-      "אפשר להמשיך עם מאפינס/מוצרים אחרים בלבד, או לבחור תאריך אחר ללחמים.";
+      "שימי לב: בדולב אין איסוף לחמים/לחמניות ביום ראשון. אפשר להמשיך עם מאפינס/מוצרים אחרים בלבד, או לבחור תאריך אחר ללחמים.";
     btnEl.disabled = true;
     return;
   }
@@ -152,7 +151,7 @@ function renderRollsMix(){
   container.innerHTML = "";
 
   const card = document.createElement("div");
-  card.className = "card";
+  card.className = "card compact-card"; // ✅ כאן השינוי
   card.innerHTML = `
     <img src="${ROLLS_MIX.img}" alt="${ROLLS_MIX.name}">
     <div class="name">${ROLLS_MIX.name}</div>
@@ -205,16 +204,15 @@ function renderRollsMix(){
   });
 }
 
-/* ========= רינדור מאפינס: כרטיס אחד עם בחירת טעם ========= */
+/* ========= רינדור מאפינס ========= */
 function renderMuffins(){
   const container = document.getElementById("muffins");
   container.innerHTML = "";
 
-  // נוודא שהעגלה מחזיקה את כל הטעמים
   MUFFIN_OPTIONS.forEach(o => { cart[o.id] = cart[o.id] || 0; });
 
   const card = document.createElement("div");
-  card.className = "card";
+  card.className = "card compact-card"; // ✅ כאן השינוי
   card.innerHTML = `
     <img id="muffinImg" src="${MUFFINS_DEFAULT_IMG}" alt="מאפינס">
     <div class="name">מאפינס</div>
@@ -249,9 +247,7 @@ function renderMuffins(){
     flavorEl.appendChild(o);
   });
 
-  function resetMuffinsCart(){
-    MUFFIN_OPTIONS.forEach(opt => { cart[opt.id] = 0; });
-  }
+  function resetMuffinsCart(){ MUFFIN_OPTIONS.forEach(opt => { cart[opt.id] = 0; }); }
 
   function updateMuffinUI(){
     const id = flavorEl.value;
@@ -303,7 +299,7 @@ function calcTotal(){
   updatePickupRulesUI();
 }
 
-/* ========= שליחה לוואטסאפ ========= */
+/* ========= שליחה ========= */
 function sendOrder(){
   updatePickupRulesUI();
   if(document.getElementById("sendBtn").disabled){
@@ -317,22 +313,10 @@ function sendOrder(){
   const notes = document.getElementById("notes").value.trim();
   const pickupPoint = document.getElementById("pickupPoint").value;
 
-  if(!name || phone.length < 7){
-    alert("נא למלא שם וטלפון");
-    return;
-  }
-  if(!isValidPickupDate(date)){
-    alert("נא לבחור תאריך תקין (מינימום יום מראש)");
-    return;
-  }
-  if(total <= 0){
-    alert("נא לבחור מוצרים להזמנה");
-    return;
-  }
-  if(rollsMixQty > 0 && !rollsMixFlour){
-    alert("נא לבחור קמח למיקס הלחמניות");
-    return;
-  }
+  if(!name || phone.length < 7){ alert("נא למלא שם וטלפון"); return; }
+  if(!isValidPickupDate(date)){ alert("נא לבחור תאריך תקין (מינימום יום מראש)"); return; }
+  if(total <= 0){ alert("נא לבחור מוצרים להזמנה"); return; }
+  if(rollsMixQty > 0 && !rollsMixFlour){ alert("נא לבחור קמח למיקס הלחמניות"); return; }
 
   const lines = [];
   lines.push("היי! הזמנה חדשה מהאתר 🙂");

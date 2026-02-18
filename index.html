@@ -108,6 +108,7 @@ main{
   width:100%;
   border-radius:16px;
   margin-bottom:12px;
+  display:block;
 }
 
 .name{ font-weight:600; font-size:18px; }
@@ -117,6 +118,7 @@ main{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:10px;
 }
 
 select, input[type="number"]{
@@ -124,6 +126,12 @@ select, input[type="number"]{
   border-radius:10px;
   border:1px solid #dbc7b5;
   font-family:inherit;
+  background:#fff;
+}
+
+.row input[type="number"]{
+  width:120px;
+  text-align:center;
 }
 
 .box{
@@ -134,7 +142,7 @@ select, input[type="number"]{
   box-shadow:0 8px 22px rgba(0,0,0,0.06);
 }
 
-.box select{
+input, textarea{
   width:100%;
   margin-top:10px;
   padding:12px;
@@ -145,13 +153,14 @@ select, input[type="number"]{
   box-sizing:border-box;
 }
 
-input, textarea{
+.box select{
   width:100%;
   margin-top:10px;
   padding:12px;
   border-radius:12px;
   border:1px solid #dbc7b5;
   font-family:inherit;
+  background:#fff;
   box-sizing:border-box;
 }
 
@@ -175,12 +184,27 @@ input, textarea{
 
 .btn:hover{ background:#5f3821; }
 
+.btn:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+
 .hint{
   margin-top:10px;
   font-size:14px;
   text-align:center;
   color:#7a6653;
   line-height:1.6;
+}
+
+.rule{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:#fff1e6;
+  border:1px solid #f0c9b0;
+  color:#6b2d1a;
+  display:none;
 }
 </style>
 </head>
@@ -189,7 +213,7 @@ input, textarea{
 
 <header>
   <h1 class="main-title">בית המאפה הקטן בדולב</h1>
-  <img class="logo" src="logo-new.jpg" />
+  <img class="logo" src="logo-new.jpg" alt="logo" />
   <div class="sub-title">מאפיית בוטיק למאפי מחמצת</div>
   <div class="wheat-divider">
     <svg viewBox="0 0 300 40">
@@ -211,7 +235,6 @@ input, textarea{
     <input id="custPhone" placeholder="טלפון">
     <input id="pickupDate" type="date">
 
-    <!-- ✅ נקודת איסוף -->
     <select id="pickupLocation">
       <option value="">בחירת נקודת איסוף…</option>
       <option value="דולב">דולב — להזמין לילה לפני. אין איסוף לחמים ביום ראשון (מאפינס אפשר)</option>
@@ -219,15 +242,17 @@ input, textarea{
       <option value="גבעות עדן">גבעות עדן — בית משפחת מוריס (יונתן ואליטל) (יש לברר בפרטי את יום האיסוף)</option>
     </select>
 
+    <div class="rule" id="ruleMsg"></div>
+
     <textarea id="notes" placeholder="הערות להזמנה"></textarea>
 
     <div class="total">סה״כ: ₪<span id="total">0</span></div>
-    <button class="btn" onclick="sendOrder()">שליחת הזמנה ב-WhatsApp</button>
+    <button class="btn" id="sendBtn" type="button">שליחת הזמנה ב-WhatsApp</button>
 
     <div class="hint">הזמנה יום מראש • אין איסוף ביום ראשון</div>
   </div>
 </main>
 
-<script src="app.js?v=1"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>

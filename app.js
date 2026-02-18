@@ -1,178 +1,72 @@
-// ======================
-// הגדרות
-// ======================
-
-const WHATSAPP_NUMBER = "972509066634"; // בלי 0 בהתחלה
+const WHATSAPP_NUMBER = "972509066634";
 
 const PRODUCTS = [
-  // לחמים
-  { id: "classic", name: "לחם מחמצת קלאסי", price: 40, type: "bread" },
-  { id: "onion", name: "לחם מחמצת בצל", price: 45, type: "bread" },
-  { id: "cheese_chili", name: "לחם מחמצת גבינה וצ׳ילי", price: 45, type: "bread" },
-  { id: "cheddar", name: "לחם מחמצת צ׳דר", price: 45, type: "bread" },
-  { id: "butter_garlic", name: "לחם מחמצת חמאה ושום", price: 45, type: "bread" },
-  { id: "cheese_onion", name: "לחם מחמצת גבינה ובצל", price: 45, type: "bread" },
-  { id: "sweet", name: "לחם מחמצת מתוק", price: 45, type: "bread" },
+  { id:"classic", name:"לחם מחמצת קלאסי", price:45, img:"classic.jpg" },
+  { id:"onion", name:"לחם מחמצת בצל", price:45, img:"onion.jpg" },
+  { id:"cheddar", name:"לחם מחמצת צ'דר", price:45, img:"cheddar.jpg" },
+  { id:"cheese_chili", name:"לחם מחמצת גבינה וצ'ילי", price:45, img:"cheese_chili.jpg" },
+  { id:"cheese_onion", name:"לחם מחמצת גבינה ובצל", price:45, img:"cheese_onion.jpg" },
 
-  // מאפינס
-  {
-    id: "muffin_regular",
-    name: "מאפינס רגיל (עם סוכר)",
-    price: 12,
-    minQty: 4,
-    type: "muffin",
-    image: "muffins-default.jpg"
-  },
-  {
-    id: "muffin_spelt_sf",
-    name: "מאפינס כוסמין ללא סוכר",
-    price: 15,
-    minQty: 4,
-    type: "muffin",
-    image: "muffins-default.jpg"
-  }
+  { id:"mix_rolls", name:"מיקס לחמניות מחמצת", price:45, img:"rolls-mix.png", type:"mix" },
+
+  { id:"muffin_choc", name:"מאפינס שוקולד", price:12, img:"muffin_regular_chocolate.jpg" },
+  { id:"muffin_apple", name:"מאפינס תפוח קינמון", price:12, img:"muffin_regular_apple_cinnamon.jpg" },
+
+  { id:"muffin_choc_sf", name:"מאפינס שוקולד ללא סוכר", price:15, img:"muffins-default.jpg" },
+  { id:"muffin_apple_sf", name:"מאפינס תפוח קינמון ללא סוכר", price:15, img:"muffins-default.jpg" }
 ];
 
-let cart = {};
-let total = 0;
+const grid = document.getElementById("products");
 
-// ======================
-// יצירת תצוגה
-// ======================
+PRODUCTS.forEach(p=>{
+  const card = document.createElement("div");
+  card.className="card";
 
-function renderProducts() {
-  const container = document.getElementById("products");
-  container.innerHTML = "";
-
-  PRODUCTS.forEach(product => {
-    cart[product.id] = 0;
-
-    const card = document.createElement("div");
-    card.className = "card";
-
-    let imageHTML = "";
-    if (product.type === "muffin") {
-      imageHTML = `
-        <img src="${product.image}" 
-             style="width:100%; border-radius:12px; margin-bottom:10px;" />
-      `;
-    }
-
-    card.innerHTML = `
-      ${imageHTML}
-      <div class="name">${product.name}</div>
-      <div class="price">₪${product.price}</div>
-      <div class="row">
-        <label>כמות</label>
-        <input type="number" min="0" step="1" value="0"
-               onchange="updateQty('${product.id}', this.value)">
-      </div>
-      ${product.type === "muffin" ? `<div style="font-size:12px;color:#777;">מינימום ${product.minQty} יחידות</div>` : ""}
+  let extra = "";
+  if(p.type==="mix"){
+    extra = `
+      <select id="flour_${p.id}">
+        <option value="">בחירת קמח...</option>
+        <option>קמח לבן</option>
+        <option>קמח כוסמין</option>
+      </select>
     `;
+  }
 
-    container.appendChild(card);
+  card.innerHTML=`
+    <img src="${p.img}">
+    <div class="name">${p.name}</div>
+    <div class="price">₪${p.price}</div>
+    ${extra}
+    <div class="row">
+      <input type="number" min="0" value="0" id="qty_${p.id}" onchange="calcTotal()">
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+function calcTotal(){
+  let total=0;
+  PRODUCTS.forEach(p=>{
+    const qty=parseInt(document.getElementById("qty_"+p.id).value)||0;
+    total+=qty*p.price;
   });
+  document.getElementById("total").innerText=total;
 }
 
-// ======================
-// עדכון כמות
-// ======================
-
-function updateQty(id, value) {
-  const product = PRODUCTS.find(p => p.id === id);
-  let qty = parseInt(value) || 0;
-
-  if (product.type === "muffin" && qty > 0 && qty < product.minQty) {
-    alert(`המינימום למוצר זה הוא ${product.minQty}`);
-    qty = 0;
-  }
-
-  cart[id] = qty;
-  calculateTotal();
-}
-
-// ======================
-// חישוב סכום
-// ======================
-
-function calculateTotal() {
-  total = 0;
-
-  PRODUCTS.forEach(product => {
-    total += (cart[product.id] || 0) * product.price;
-  });
-
-  document.getElementById("total").innerText = "₪" + total;
-}
-
-// ======================
-// בדיקת תאריך
-// ======================
-
-function isValidDate(dateStr) {
-  if (!dateStr) return false;
-
-  const selected = new Date(dateStr);
-  const today = new Date();
-
-  // יום מראש
-  const tomorrow = new Date();
-  tomorrow.setDate(today.getDate() + 1);
-
-  if (selected < tomorrow) return false;
-
-  // אין ראשון
-  if (selected.getDay() === 0) return false;
-
-  return true;
-}
-
-// ======================
-// שליחת וואטסאפ
-// ======================
-
-function sendOrder() {
-  const name = document.getElementById("custName").value.trim();
-  const phone = document.getElementById("custPhone").value.trim();
-  const date = document.getElementById("pickupDate").value;
-  const notes = document.getElementById("notes").value.trim();
-
-  if (!name || !phone || !isValidDate(date)) {
-    alert("נא למלא פרטים ולבחור תאריך תקין (יום מראש, לא ראשון)");
-    return;
-  }
-
-  if (total === 0) {
-    alert("נא לבחור מוצרים להזמנה");
-    return;
-  }
-
-  let message = `היי! הזמנה חדשה מהאתר 😊\n\n`;
-  message += `שם: ${name}\n`;
-  message += `טלפון: ${phone}\n`;
-  message += `תאריך איסוף: ${date}\n\n`;
-  message += `פריטים:\n`;
-
-  PRODUCTS.forEach(product => {
-    if (cart[product.id] > 0) {
-      message += `- ${product.name} x${cart[product.id]} = ₪${cart[product.id] * product.price}\n`;
+function sendOrder(){
+  let message="הזמנה חדשה:%0A";
+  PRODUCTS.forEach(p=>{
+    const qty=parseInt(document.getElementById("qty_"+p.id).value)||0;
+    if(qty>0){
+      message+=`${p.name} x${qty}%0A`;
     }
   });
 
-  message += `\nסה״כ: ₪${total}\n`;
+  message+=`%0Aשם: ${custName.value}%0A`;
+  message+=`טלפון: ${custPhone.value}%0A`;
+  message+=`תאריך איסוף: ${pickupDate.value}%0A`;
+  message+=`הערות: ${notes.value}%0A`;
 
-  if (notes) {
-    message += `\nהערות:\n${notes}`;
-  }
-
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  window.open(url, "_blank");
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`,"_blank");
 }
-
-// ======================
-// אתחול
-// ======================
-
-document.addEventListener("DOMContentLoaded", function() {
-  renderProducts();
-});

@@ -5,95 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>בית המאפה הקטן בדולב</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
-
   <style>
     body{
       margin:0;
-      font-family:'Assistant', sans-serif;
-      background:url("./site-bg.jpg") center top repeat;
+      font-family: "Assistant", sans-serif;
+      background:url("./site-bg.jpg") center/cover fixed;
       color:#3e2f23;
     }
 
     header{
       text-align:center;
       padding:90px 16px 55px;
-      background: url("./header-bg.jpg") center/cover no-repeat;
+      background:url("./header-bg.jpg") center/cover no-repeat;
       border-bottom:1px solid #e2d2c0;
     }
 
     .main-title{
       margin:0 0 20px 0;
-      font-size:56px;
+      font-size:52px;
       font-weight:800;
-      line-height:1.1;
-      color:#6a3d1f;
-      letter-spacing:1px;
+      color:#4a2a18;
     }
 
     .logo{
-      width:230px;
-      height:230px;
+      width:240px;
+      height:240px;
       object-fit:cover;
       border-radius:28px;
-      box-shadow:0 10px 28px rgba(0,0,0,0.15);
-      margin:0 auto 16px;
+      box-shadow:0 12px 28px rgba(0,0,0,0.2);
+      margin:0 auto 18px;
       display:block;
       background:#fffaf3;
     }
 
     .sub-title{
-      margin-top:6px;
       font-size:22px;
-      font-weight:600;
+      font-weight:400;
       color:#4e2f1e;
+      margin-top:10px;
     }
 
     main{
       max-width:1100px;
       margin:0 auto;
-      padding:30px 16px 70px;
+      padding:40px 16px 70px;
     }
 
     .section-title{
-      margin:26px 0 10px;
-      font-size:22px;
-      font-weight:800;
-      color:#3e2f23;
+      font-size:24px;
+      font-weight:700;
+      margin:60px 0 20px;
+      color:#5a3a27;
     }
 
-  .grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
-  gap:20px;
-  margin-top:10px;
-
-  /* חדש: מונע פריט יחיד להימתח על כל הרוחב */
-  justify-content:center;
-}
-
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap:24px;
+    }
 
     .card{
       background:#fffaf3;
-      border:1px solid #f0e2d4;
-      border-radius:22px;
+      border-radius:20px;
       padding:18px;
-      box-shadow:0 8px 20px rgba(0,0,0,0.06);
+      box-shadow:0 8px 22px rgba(0,0,0,0.08);
     }
-
-    .card{
-  width:100%;
-  max-width:320px;
-}
 
     .card img{
       width:100%;
-      height:210px;            /* ✅ כל התמונות באותו גובה */
-      object-fit:cover;        /* ✅ חיתוך יפה */
       border-radius:16px;
       margin-bottom:12px;
-      display:block;
-      box-shadow:0 6px 16px rgba(0,0,0,0.08);
     }
 
     .name{
@@ -104,108 +85,40 @@
 
     .price{
       color:#8c5a2b;
-      font-weight:800;
+      font-weight:700;
       margin-bottom:12px;
     }
 
-    .row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-
-    /* ✅ שדות קטנים כמו בשאר */
-    input[type="number"]{
-      width:110px;
+    input[type="number"], select{
+      width:100%;
       padding:10px;
       border-radius:12px;
       border:1px solid #dbc7b5;
-      background:#fff;
-      font-family:inherit;
       font-size:16px;
       text-align:center;
-      box-sizing:border-box;
-    }
-
-    /* ✅ select לא נמתח - אותו “אופי” כמו input */
-    select{
-      width:170px;
-      padding:10px;
-      border-radius:12px;
-      border:1px solid #dbc7b5;
-      background:#fff;
-      font-family:inherit;
-      font-size:16px;
-      box-sizing:border-box;
-    }
-
-    .mini-label{
-      color:#7a6653;
-      font-size:13px;
-      white-space:nowrap;
+      margin-top:8px;
     }
 
     .box{
-      margin-top:35px;
+      margin-top:60px;
       background:#fffaf3;
-      border:1px solid #f0e2d4;
       border-radius:22px;
-      padding:22px;
-      box-shadow:0 8px 22px rgba(0,0,0,0.06);
+      padding:24px;
+      box-shadow:0 8px 22px rgba(0,0,0,0.08);
     }
 
-    .box h2{
-      margin:0 0 14px 0;
-      font-size:20px;
-      font-weight:800;
-    }
-
-    input[type="text"],
-    input[type="tel"],
-    input[type="date"],
-    textarea{
+    input, textarea{
       width:100%;
       padding:14px;
       border-radius:14px;
       border:1px solid #dbc7b5;
-      font-family:inherit;
       margin-top:12px;
       font-size:16px;
-      background:#fff;
       box-sizing:border-box;
     }
 
-    textarea{ min-height:100px; }
-
-    .field-label{
-      display:block;
-      margin-top:14px;
-      font-weight:800;
-      color:#4e2f1e;
-    }
-
-    .pickup-note{
-      margin-top:10px;
-      background:#fff6ea;
-      border:1px dashed #d8c0aa;
-      border-radius:14px;
-      padding:12px 14px;
-      color:#5a3a26;
-      line-height:1.6;
-      font-size:14px;
-    }
-
-    .rule-msg{
-      margin-top:10px;
-      background:#fff0e6;
-      border:1px solid #e3b39a;
-      border-radius:14px;
-      padding:12px 14px;
-      color:#6b2d1a;
-      line-height:1.6;
-      font-size:14px;
-      display:none;
+    textarea{
+      min-height:100px;
     }
 
     .total{
@@ -225,66 +138,53 @@
       font-weight:900;
       font-size:17px;
       cursor:pointer;
-      transition:0.2s;
     }
 
-    .btn:hover{ background:#5f3821; }
-    .btn:disabled{ opacity:0.6; cursor:not-allowed; }
-
-    .hint{
-      margin-top:12px;
-      color:#7a6653;
-      font-size:14px;
-      text-align:center;
-      line-height:1.5;
+    .btn:hover{
+      background:#5f3821;
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1 class="main-title">בית המאפה הקטן בדולב</h1>
-    <img class="logo" src="logo-new.jpg" alt="logo" />
-    <div class="sub-title">מאפיית בוטיק למאפי מחמצת</div>
-  </header>
 
-  <main>
-    <div class="section-title">לחמי מחמצת</div>
-    <div class="grid" id="breads"></div>
+<header>
+  <h1 class="main-title">בית המאפה הקטן בדולב</h1>
+  <img class="logo" src="logo-new.jpg" />
+  <div class="sub-title">מאפיית בוטיק למאפי מחמצת</div>
+</header>
 
-    <div class="section-title">מיקס לחמניות מחמצת</div>
-    <div class="grid" id="rolls"></div>
+<main>
 
-    <div class="section-title">מאפינס</div>
-    <div class="grid" id="muffins"></div>
+  <div class="section-title">לחמי מחמצת</div>
+  <div class="grid" id="breads"></div>
 
-    <div class="box">
-      <h2>פרטי הזמנה</h2>
+  <div class="section-title">מיקס לחמניות מחמצת</div>
 
-      <input id="custName" type="text" placeholder="שם מלא" />
-      <input id="custPhone" type="tel" placeholder="טלפון" />
-      <input id="pickupDate" type="date" />
+  <div class="section-title">מאפינס</div>
 
-      <label class="field-label" for="pickupPoint">נקודת איסוף</label>
-      <select id="pickupPoint" style="width:100%;">
-        <option value="דולב">דולב</option>
-        <option value="בית שמש – בית משפחת מוריס">בית שמש – בית משפחת מוריס</option>
-        <option value="גבעות עדן – בית משפחת מוריס (יונתן ואליטל)">גבעות עדן – בית משפחת מוריס (יונתן ואליטל)</option>
-      </select>
+  <div class="box">
+    <h2>פרטי הזמנה</h2>
 
-      <div class="pickup-note" id="pickupNote"></div>
-      <div class="rule-msg" id="pickupRuleMsg" aria-live="polite"></div>
+    <input id="custName" type="text" placeholder="שם מלא" />
+    <input id="custPhone" type="tel" placeholder="טלפון" />
+    <input id="pickupDate" type="date" />
+    
+    <select id="pickupLocation">
+      <option value="">בחר נקודת איסוף</option>
+      <option value="דולב">דולב – להזמין לילה לפני, אין איסוף לחמים ביום ראשון</option>
+      <option value="בית שמש">בית שמש – בית משפחת מוריס (לברר יום איסוף)</option>
+      <option value="גבעות עדן">גבעות עדן – משפחת מוריס (יונתן ואליטל)</option>
+    </select>
 
-      <textarea id="notes" placeholder="הערות להזמנה"></textarea>
+    <textarea id="notes" placeholder="הערות להזמנה"></textarea>
 
-      <div class="total">סה״כ: <span id="total">₪0</span></div>
-      <button class="btn" id="sendBtn" type="button">שליחת הזמנה ב-WhatsApp</button>
+    <div class="total">סה״כ: <span id="total">₪0</span></div>
+    <button class="btn" id="sendBtn">שליחת הזמנה ב-WhatsApp</button>
+  </div>
 
-      <div class="hint">הזמנה יום מראש • בדולב אין איסוף לחמים ביום ראשון (מאפינס כן)</div>
-    </div>
-  </main>
+</main>
 
-  <!-- ✅ הקאש באייפון: מספר גרסה -->
-  <script src="app.js?v=21"></script>
+<script src="app.js"></script>
 </body>
 </html>

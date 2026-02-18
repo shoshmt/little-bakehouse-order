@@ -10,14 +10,12 @@ const PRODUCTS = [
   { id:"cheese_chili", name:"לחם מחמצת גבינה וצ'ילי", price:45, img:"cheese_chili.jpg", kind:"bread" },
   { id:"cheese_onion", name:"לחם מחמצת גבינה ובצל", price:45, img:"cheese_onion.jpg", kind:"bread" },
 
-  // אם הקובץ אצלך לא png, תשני כאן לשם המדויק (jpg/jpeg)
   { id:"mix_rolls", name:"מיקס לחמניות מחמצת", price:45, img:"rolls-mix.jpg", kind:"bread", type:"mix" },
 ];
 
 /* =======================
    2) מאפינס — 2 קבוצות דיפולט עם פתיחה
    ======================= */
-/* תעדכני כאן את שמות התמונות הדיפולט לפי מה שיש לך בתיקייה */
 const MUFFIN_IMG_WITH_SUGAR = "muffins-default.jpg";
 const MUFFIN_IMG_NO_SUGAR   = "muffins-default.jpg";
 
@@ -40,21 +38,47 @@ const MUFFIN_GROUPS = [
     options: [
       { id:"muffin_choc_sf",   label:"מאפינס שוקולד ללא סוכר",        price:15 },
       { id:"muffin_apple_sf",  label:"מאפינס תפוח קינמון ללא סוכר",   price:15 },
-      // אם אין לך את האופציה הזו בפועל — פשוט תמחקי את השורה:
       { id:"muffin_vanilla_sf",label:"מאפינס וניל־אספרסו ללא סוכר",   price:15 },
     ]
+  }
+];
+
+/* =======================
+   3) סדנאות מחמצת (חדש)
+   ======================= */
+const WORKSHOPS = [
+  {
+    id:"ws_couple",
+    title:"סדנה זוגית חווייתית",
+    price:800,
+    img:"workshop-couple.jpg",
+    desc:"ערב זוגי מלא אווירה: הכנת פיצות מחמצת בטאבון, הכנת כיכר לחם מחמצת, והבנה ברורה של כל תהליך המחמצת – מההאכלה ועד האפייה."
+  },
+  {
+    id:"ws_group",
+    title:"סדנה קבוצתית (מינ׳ 5 משתתפים)",
+    price:300,
+    img:"workshop-group.jpg",
+    desc:"חוויה קבוצתית טעימה ומלמדת: פיצות מחמצת בטאבון, כיכר לחם מחמצת, ולמידה מסודרת על תהליך המחמצת – בקצב נעים ועם המון טיפים."
+  },
+  {
+    id:"ws_private",
+    title:"סדנה אישית",
+    price:450,
+    img:"workshop-private.jpg",
+    desc:"מפגש 1:1 ממוקד ומעמיק: בניית מחמצת, הבנת תהליכים, התאמת קמחים וכלים, ודיוק לפי מה שאת/ה רוצה לאפות בבית."
   }
 ];
 
 const grid = document.getElementById("products");
 
 /* =======================
-   בניית כרטיסים
+   בניית כרטיסים (מוצרים + מאפינס)
    ======================= */
 function buildCards(){
   grid.innerHTML = "";
 
-  // כרטיסים רגילים
+  // מוצרים רגילים
   PRODUCTS.forEach(p=>{
     const card = document.createElement("div");
     card.className = "card";
@@ -99,7 +123,7 @@ function buildCards(){
     grid.appendChild(card);
   });
 
-  // כרטיסי מאפינס קבוצתיים (דיפולט + פתיחה)
+  // כרטיסי מאפינס קבוצתיים
   MUFFIN_GROUPS.forEach(group=>{
     const card = document.createElement("div");
     card.className = "card";
@@ -107,13 +131,7 @@ function buildCards(){
     const optionsHtml = group.options.map(opt => `
       <div class="row" style="margin-top:10px;">
         <div style="flex:1; color:#3e2f23; font-size:15px;">${opt.label}</div>
-        <input
-          type="number"
-          min="0"
-          value="0"
-          id="qty_${opt.id}"
-          style="width:120px;text-align:center;"
-        >
+        <input type="number" min="0" value="0" id="qty_${opt.id}" style="width:120px;text-align:center;">
       </div>
     `).join("");
 
@@ -130,7 +148,6 @@ function buildCards(){
       </details>
     `;
 
-    // מאזינים לכמויות מאפינס
     group.options.forEach(opt=>{
       const el = card.querySelector(`#qty_${opt.id}`);
       el.addEventListener("input", () => {
@@ -145,18 +162,64 @@ function buildCards(){
 }
 
 /* =======================
+   רינדור סדנאות (חדש)
+   ======================= */
+function renderWorkshops(){
+  const wsGrid = document.getElementById("workshops");
+  if(!wsGrid) return;
+  wsGrid.innerHTML = "";
+
+  WORKSHOPS.forEach(w=>{
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${w.img}" alt="${w.title}">
+      <div class="name">${w.title}</div>
+      <div class="price">₪${w.price}</div>
+      <div style="color:#6b5442; line-height:1.7; font-size:15px;">${w.desc}</div>
+      <div style="margin-top:10px; color:#7a6653; font-size:13px; line-height:1.6;">
+        יש להזמין שבוע מראש ולהמתין לקבלת אישור בווטסאפ חוזר.
+      </div>
+      <button class="ws-btn" type="button" onclick="requestWorkshop('${w.id}')">בקשת הרשמה לסדנה</button>
+    `;
+
+    wsGrid.appendChild(card);
+  });
+}
+
+function requestWorkshop(workshopId){
+  const w = WORKSHOPS.find(x => x.id === workshopId);
+  if(!w) return;
+
+  const name = (document.getElementById("custName").value || "").trim();
+  const phone = (document.getElementById("custPhone").value || "").trim();
+  const notes = (document.getElementById("notes").value || "").trim();
+
+  if(!name){ alert("כדי לשלוח בקשת סדנה, נא למלא שם מלא"); return; }
+  if(phone.length < 7){ alert("כדי לשלוח בקשת סדנה, נא למלא מספר טלפון תקין"); return; }
+
+  let message = `בקשת הרשמה לסדנת מחמצת:\n\n`;
+  message += `${w.title} — ₪${w.price}\n\n`;
+  message += `שם: ${name}\n`;
+  message += `טלפון: ${phone}\n`;
+  if(notes) message += `הערות: ${notes}\n`;
+  message += `\n*לתשומת לב:* הזמנה לפחות שבוע מראש. ההרשמה היא בקשה — ממתינים לאישור בווטסאפ חוזר.`;
+
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
+}
+
+/* =======================
    חישוב סה"כ
    ======================= */
 function calcTotal(){
   let total = 0;
 
-  // רגילים
   PRODUCTS.forEach(p=>{
     const qty = parseInt(document.getElementById("qty_"+p.id).value, 10) || 0;
     total += qty * p.price;
   });
 
-  // מאפינס לפי טעמים
   MUFFIN_GROUPS.forEach(group=>{
     group.options.forEach(opt=>{
       const qty = parseInt(document.getElementById("qty_"+opt.id).value, 10) || 0;
@@ -215,7 +278,6 @@ function updateRulesUI(){
   let blocked = false;
   let msg = "";
 
-  // דולב + ראשון + יש לחם/לחמניות => חסימה (מאפינס אפשר)
   if(pickupLocation === "דולב" && isSunday(dateStr) && hasAnyBreadInCart()){
     blocked = true;
     msg = "בדולב אין איסוף לחמים/לחמניות ביום ראשון. אפשר לבחור תאריך אחר או להזמין מאפינס בלבד.";
@@ -233,7 +295,7 @@ function updateRulesUI(){
 }
 
 /* =======================
-   שליחה לוואטסאפ
+   שליחה לוואטסאפ (הזמנת מאפים)
    ======================= */
 function sendOrder(){
   const name = (document.getElementById("custName").value || "").trim();
@@ -250,7 +312,6 @@ function sendOrder(){
   updateRulesUI();
   if(document.getElementById("sendBtn").disabled) return;
 
-  // מיקס לחמניות — חובה לבחור קמח אם יש כמות
   const mixQty = parseInt(document.getElementById("qty_mix_rolls").value, 10) || 0;
   if(mixQty > 0){
     const flour = document.getElementById("flour_mix_rolls").value;
@@ -267,7 +328,6 @@ function sendOrder(){
 
   let message = "הזמנה חדשה:\n\n";
 
-  // רגילים
   PRODUCTS.forEach(p=>{
     const qty = parseInt(document.getElementById("qty_"+p.id).value, 10) || 0;
     if(qty > 0){
@@ -280,7 +340,6 @@ function sendOrder(){
     }
   });
 
-  // מאפינס — מקובץ לפי קבוצות
   MUFFIN_GROUPS.forEach(group=>{
     const chosen = group.options
       .map(opt => {
@@ -294,7 +353,6 @@ function sendOrder(){
     }
   });
 
-  // פרטים
   message += `\nשם: ${name}\n`;
   message += `טלפון: ${phone}\n`;
   message += `נקודת איסוף: ${pickupLocation}\n`;
@@ -306,10 +364,10 @@ function sendOrder(){
 
 /* INIT */
 buildCards();
+renderWorkshops();
 calcTotal();
 updateRulesUI();
 
-// חיבור הכפתור בצורה בטוחה
 const btn = document.getElementById("sendBtn");
 if(btn) btn.addEventListener("click", sendOrder);
 

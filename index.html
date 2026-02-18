@@ -4,12 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>בית המאפה הקטן בדולב</title>
-<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Heebo:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- Assistant Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     body{
       margin:0;
-      font-family: Georgia, serif;
+      font-family:'Assistant', sans-serif;
       background:#f6efe6;
       color:#3e2f23;
     }
@@ -18,31 +20,23 @@
       position:relative;
       text-align:center;
       padding:90px 16px 55px;
-
-      /* רקע תמונה (שימי לב לשם הקובץ!) */
       background: url("./header-bg.jpg") center/cover no-repeat;
-
       border-bottom:1px solid #e2d2c0;
     }
-
-  
 
     header *{
       position:relative;
     }
 
-.main-title{
-  margin:0 0 20px 0;
-  font-family:'Heebo', sans-serif;
-  font-size:52px;
-  font-weight:900;
-  line-height:1.1;
-  color:#6b3e1f; /* חום חמים שמתאים לרקע */
-  letter-spacing:1px;
-}
-
-
-
+    .main-title{
+      margin:0 0 20px 0;
+      font-family:'Assistant', sans-serif;
+      font-size:56px;
+      font-weight:300; /* Light */
+      line-height:1.1;
+      color:#6a3d1f;
+      letter-spacing:2px;
+    }
 
     .logo{
       width:220px;
@@ -58,6 +52,7 @@
     .sub-title{
       margin-top:6px;
       font-size:16px;
+      font-weight:400;
       letter-spacing:2px;
       color:#6b5442;
     }
@@ -92,14 +87,14 @@
     }
 
     .name{
-      font-weight:700;
+      font-weight:600;
       margin-bottom:6px;
-      font-size:17px;
+      font-size:18px;
     }
 
     .price{
       color:#8c5a2b;
-      font-weight:700;
+      font-weight:600;
       margin-bottom:12px;
     }
 
@@ -116,7 +111,7 @@
       border-radius:12px;
       border:1px solid #dbc7b5;
       background:#fff;
-      font-family:inherit;
+      font-family:'Assistant', sans-serif;
       font-size:16px;
       text-align:center;
     }
@@ -132,7 +127,8 @@
 
     .box h2{
       margin:0 0 14px 0;
-      font-size:20px;
+      font-size:22px;
+      font-weight:600;
     }
 
     input[type="text"],
@@ -143,7 +139,7 @@
       padding:14px;
       border-radius:14px;
       border:1px solid #dbc7b5;
-      font-family:inherit;
+      font-family:'Assistant', sans-serif;
       margin-top:12px;
       font-size:16px;
       background:#fff;
@@ -156,7 +152,7 @@
 
     .total{
       margin-top:18px;
-      font-weight:900;
+      font-weight:600;
       font-size:20px;
     }
 
@@ -168,7 +164,8 @@
       border-radius:16px;
       background:#7a4b2c;
       color:#fff;
-      font-weight:900;
+      font-family:'Assistant', sans-serif;
+      font-weight:600;
       font-size:17px;
       cursor:pointer;
       transition:0.2s;
@@ -184,6 +181,7 @@
       font-size:13px;
       text-align:center;
       line-height:1.5;
+      font-weight:400;
     }
   </style>
 </head>
@@ -191,11 +189,8 @@
 <body>
 
   <header>
-    <!-- עברית מעל הלוגו -->
     <h1 class="main-title">בית המאפה הקטן בדולב</h1>
-
     <img class="logo" src="logo-new.jpg" alt="The Little Bakehouse logo" />
-
     <div class="sub-title">The Little Bakehouse</div>
   </header>
 

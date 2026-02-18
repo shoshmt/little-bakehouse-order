@@ -5,62 +5,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>בית המאפה הקטן בדולב</title>
 
-  <!-- Assistant Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Google Font: Assistant -->
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
 
   <style>
     body{
       margin:0;
       font-family:'Assistant', sans-serif;
-      background:#f6efe6;
+      /* רקע לכל הדף (טקסטורה) */
+      background:url("./site-bg.jpg") center/cover fixed no-repeat;
       color:#3e2f23;
     }
 
+    /* ================= HEADER ================= */
     header{
       position:relative;
+      overflow:hidden;
       text-align:center;
-      padding:90px 16px 55px;
-      background: url("./header-bg.jpg") center/cover no-repeat;
-      border-bottom:1px solid #e2d2c0;
+      padding:100px 20px 60px;
+      background:url("./header-bg.jpg") center/cover no-repeat;
+      border-bottom:0; /* בלי קו חד */
     }
 
-    header *{
-      position:relative;
+    /* מעבר רך מתחת לסרגל (בלי לשנות שקיפות של הסרגל עצמו) */
+    header::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:110px;
+      pointer-events:none;
+      background:linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0) 40%,
+        rgba(248,240,230,1) 100%
+      );
     }
 
     .main-title{
-      margin:0 0 20px 0;
-      font-family:'Assistant', sans-serif;
+      margin:0 0 25px 0;
       font-size:56px;
-      font-weight:300; /* Light */
-      line-height:1.1;
+      font-weight:800;
       color:#6a3d1f;
-      letter-spacing:2px;
+      letter-spacing:1.5px;
+      line-height:1.1;
+      position:relative;
+      z-index:1;
     }
 
     .logo{
-      width:220px;
-      height:220px;
+      width:240px;
+      height:240px;
       object-fit:cover;
-      border-radius:28px;
-      box-shadow:0 10px 28px rgba(0,0,0,0.15);
-      margin:0 auto 18px;
+      border-radius:30px;
+      box-shadow:0 12px 30px rgba(0,0,0,0.18);
+      margin:0 auto 20px;
       display:block;
       background:#fffaf3;
+      position:relative;
+      z-index:1;
     }
 
     .sub-title{
-      margin-top:6px;
-      font-size:16px;
-      font-weight:400;
-      letter-spacing:2px;
-      color:#6b5442;
+      font-size:22px;
+      font-weight:300; /* Assistant Light */
+      color:#6b4a34;
+      margin-top:10px;
+      position:relative;
+      z-index:1;
     }
 
+    /* Wheat divider (illustrated) */
+    .wheat-divider{
+      margin-top:20px;
+      display:flex;
+      justify-content:center;
+      position:relative;
+      z-index:1;
+    }
+
+    .wheat-divider svg{
+      width:180px;
+      height:auto;
+      opacity:0.85;
+    }
+
+    /* ================= CONTENT ================= */
     main{
       max-width:1000px;
       margin:0 auto;
-      padding:30px 16px 70px;
+      padding:40px 16px 80px;
     }
 
     .grid{
@@ -94,7 +130,7 @@
 
     .price{
       color:#8c5a2b;
-      font-weight:600;
+      font-weight:700;
       margin-bottom:12px;
     }
 
@@ -111,13 +147,14 @@
       border-radius:12px;
       border:1px solid #dbc7b5;
       background:#fff;
-      font-family:'Assistant', sans-serif;
+      font-family:inherit;
       font-size:16px;
       text-align:center;
     }
 
+    /* ================= ORDER BOX ================= */
     .box{
-      margin-top:35px;
+      margin-top:40px;
       background:#fffaf3;
       border:1px solid #f0e2d4;
       border-radius:22px;
@@ -139,7 +176,7 @@
       padding:14px;
       border-radius:14px;
       border:1px solid #dbc7b5;
-      font-family:'Assistant', sans-serif;
+      font-family:inherit;
       margin-top:12px;
       font-size:16px;
       background:#fff;
@@ -152,7 +189,7 @@
 
     .total{
       margin-top:18px;
-      font-weight:600;
+      font-weight:800;
       font-size:20px;
     }
 
@@ -164,8 +201,7 @@
       border-radius:16px;
       background:#7a4b2c;
       color:#fff;
-      font-family:'Assistant', sans-serif;
-      font-weight:600;
+      font-weight:800;
       font-size:17px;
       cursor:pointer;
       transition:0.2s;
@@ -178,10 +214,9 @@
     .hint{
       margin-top:12px;
       color:#7a6653;
-      font-size:13px;
+      font-size:14px;
       text-align:center;
       line-height:1.5;
-      font-weight:400;
     }
   </style>
 </head>
@@ -190,8 +225,25 @@
 
   <header>
     <h1 class="main-title">בית המאפה הקטן בדולב</h1>
-    <img class="logo" src="logo-new.jpg" alt="The Little Bakehouse logo" />
-    <div class="sub-title">The Little Bakehouse</div>
+    <img class="logo" src="logo-new.jpg" alt="logo" />
+    <div class="sub-title">מאפיית בוטיק למאפי מחמצת</div>
+
+    <div class="wheat-divider">
+      <svg viewBox="0 0 300 40" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#b68b5e" stroke-width="1.5" fill="none" stroke-linecap="round">
+          <line x1="20" y1="20" x2="120" y2="20"/>
+          <line x1="180" y1="20" x2="280" y2="20"/>
+
+          <path d="M130 20 Q135 10 140 20"/>
+          <path d="M135 18 Q140 8 145 18"/>
+          <path d="M140 16 Q145 6 150 16"/>
+
+          <path d="M170 20 Q165 10 160 20"/>
+          <path d="M165 18 Q160 8 155 18"/>
+          <path d="M160 16 Q155 6 150 16"/>
+        </g>
+      </svg>
+    </div>
   </header>
 
   <main>

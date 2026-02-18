@@ -12,25 +12,47 @@
     body{
       margin:0;
       font-family:'Assistant', sans-serif;
-      background:url("./site-bg.jpg") repeat;
+      /* רקע לכל הדף (טקסטורה) */
+      background:url("./site-bg.jpg") center/cover fixed no-repeat;
       color:#3e2f23;
     }
 
     /* ================= HEADER ================= */
     header{
+      position:relative;
+      overflow:hidden;
       text-align:center;
       padding:100px 20px 60px;
       background:url("./header-bg.jpg") center/cover no-repeat;
-      border-bottom:1px solid #e2d2c0;
+      border-bottom:0; /* בלי קו חד */
+    }
+
+    /* מעבר רך מתחת לסרגל (בלי לשנות שקיפות של הסרגל עצמו) */
+    header::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:110px;
+      pointer-events:none;
+      background:linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0) 40%,
+        rgba(248,240,230,1) 100%
+      );
     }
 
     .main-title{
       margin:0 0 25px 0;
       font-size:56px;
-      font-weight:400;
+      font-weight:800;
       color:#6a3d1f;
       letter-spacing:1.5px;
       line-height:1.1;
+      position:relative;
+      z-index:1;
     }
 
     .logo{
@@ -42,13 +64,17 @@
       margin:0 auto 20px;
       display:block;
       background:#fffaf3;
+      position:relative;
+      z-index:1;
     }
 
     .sub-title{
-      font-size:44px;
-      font-weight:400; /* Assistant Light */
+      font-size:22px;
+      font-weight:300; /* Assistant Light */
       color:#6b4a34;
       margin-top:10px;
+      position:relative;
+      z-index:1;
     }
 
     /* Wheat divider (illustrated) */
@@ -56,6 +82,8 @@
       margin-top:20px;
       display:flex;
       justify-content:center;
+      position:relative;
+      z-index:1;
     }
 
     .wheat-divider svg{
@@ -206,12 +234,10 @@
           <line x1="20" y1="20" x2="120" y2="20"/>
           <line x1="180" y1="20" x2="280" y2="20"/>
 
-          <!-- Wheat left -->
           <path d="M130 20 Q135 10 140 20"/>
           <path d="M135 18 Q140 8 145 18"/>
           <path d="M140 16 Q145 6 150 16"/>
 
-          <!-- Wheat right -->
           <path d="M170 20 Q165 10 160 20"/>
           <path d="M165 18 Q160 8 155 18"/>
           <path d="M160 16 Q155 6 150 16"/>

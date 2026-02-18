@@ -11,7 +11,7 @@ const PRODUCTS = [
   { id:"cheese_onion", name:"לחם מחמצת גבינה ובצל", price:45, img:"cheese_onion.jpg", kind:"bread" },
 
   // אם הקובץ אצלך לא png, תשני כאן לשם המדויק (jpg/jpeg)
-  { id:"mix_rolls", name:"מיקס לחמניות מחמצת", price:45, img:"rolls-mix.png", kind:"bread", type:"mix" },
+  { id:"mix_rolls", name:"מיקס לחמניות מחמצת", price:45, img:"rolls-mix.jpg", kind:"bread", type:"mix" },
 ];
 
 /* =======================

@@ -51,13 +51,6 @@
       padding:40px 16px 70px;
     }
 
-    .section-title{
-      font-size:24px;
-      font-weight:700;
-      margin:60px 0 20px;
-      color:#5a3a27;
-    }
-
     .grid{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -75,6 +68,7 @@
       width:100%;
       border-radius:16px;
       margin-bottom:12px;
+      display:block;
     }
 
     .name{
@@ -97,6 +91,8 @@
       font-size:16px;
       text-align:center;
       margin-top:8px;
+      box-sizing:border-box;
+      background:#fff;
     }
 
     .box{
@@ -115,11 +111,10 @@
       margin-top:12px;
       font-size:16px;
       box-sizing:border-box;
+      background:#fff;
     }
 
-    textarea{
-      min-height:100px;
-    }
+    textarea{ min-height:100px; }
 
     .total{
       margin-top:18px;
@@ -140,28 +135,27 @@
       cursor:pointer;
     }
 
-    .btn:hover{
-      background:#5f3821;
+    .btn:hover{ background:#5f3821; }
+
+    .hint{
+      margin-top:10px;
+      color:#7a6653;
+      font-size:14px;
+      line-height:1.6;
     }
   </style>
 </head>
 
 <body>
-
 <header>
   <h1 class="main-title">בית המאפה הקטן בדולב</h1>
-  <img class="logo" src="logo-new.jpg" />
+  <img class="logo" src="logo-new.jpg" alt="logo" />
   <div class="sub-title">מאפיית בוטיק למאפי מחמצת</div>
 </header>
 
 <main>
-
-  <div class="section-title">לחמי מחמצת</div>
-  <div class="grid" id="breads"></div>
-
-  <div class="section-title">מיקס לחמניות מחמצת</div>
-
-  <div class="section-title">מאפינס</div>
+  <!-- כל המוצרים כאן (בלי כותרות נוספות) -->
+  <div class="grid" id="products"></div>
 
   <div class="box">
     <h2>פרטי הזמנה</h2>
@@ -169,7 +163,7 @@
     <input id="custName" type="text" placeholder="שם מלא" />
     <input id="custPhone" type="tel" placeholder="טלפון" />
     <input id="pickupDate" type="date" />
-    
+
     <select id="pickupLocation">
       <option value="">בחר נקודת איסוף</option>
       <option value="דולב">דולב – להזמין לילה לפני, אין איסוף לחמים ביום ראשון</option>
@@ -177,14 +171,18 @@
       <option value="גבעות עדן">גבעות עדן – משפחת מוריס (יונתן ואליטל)</option>
     </select>
 
+    <div class="hint">
+      בדולב: יש להזמין לילה לפני • אין איסוף לחמים ביום ראשון (מאפינס כן)
+    </div>
+
     <textarea id="notes" placeholder="הערות להזמנה"></textarea>
 
     <div class="total">סה״כ: <span id="total">₪0</span></div>
-    <button class="btn" id="sendBtn">שליחת הזמנה ב-WhatsApp</button>
+    <button class="btn" id="sendBtn" type="button">שליחת הזמנה ב-WhatsApp</button>
   </div>
-
 </main>
 
-<script src="app.js"></script>
+<!-- מומלץ לשנות מספר כדי לעקוף קאש באייפון -->
+<script src="app.js?v=5"></script>
 </body>
 </html>

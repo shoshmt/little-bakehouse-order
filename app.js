@@ -20,7 +20,7 @@ const ROLLS_MIX = {
   id: "rolls_mix",
   name: "מיקס לחמניות מחמצת (קלאסי, שום, צ׳דר, בצל)",
   price: 45,
-  image: "rolls-mix.png", // <-- ודאי שזה שם הקובץ שהעלית
+  image: "rolls-mix.jpg", // <-- ודאי שזה שם הקובץ שהעלית
   flourOptions: [
     { id: "white", label: "קמח לבן" },
     { id: "spelt", label: "קמח כוסמין" }

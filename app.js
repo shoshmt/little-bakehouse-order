@@ -222,7 +222,7 @@ function buildCards(){
       <div class="name">${group.title}</div>
       <div class="price">${group.subtitle}</div>
       <div style="margin-top:8px; color:#7a6653; font-size:13px; line-height:1.6;">
-        מינימום הזמנה: ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם (ללא שילובים).
+       4 מינימום הזמנה: ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם 
       </div>
 
       <details style="margin-top:10px;" ${visibleOptions.length ? "" : "open"}>

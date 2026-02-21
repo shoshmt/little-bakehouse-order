@@ -62,9 +62,9 @@ header::after{
 }
 
 .sub-title{
-  font-size:38px;
-  font-weight:600;
-  color:#5a341d;
+  font-size:35px;
+  font-weight:400;
+  color:#4e2f1e;
   margin-top:10px;
   position:relative;
   z-index:1;
@@ -134,62 +134,6 @@ select, input[type="number"]{
   text-align:center;
 }
 
-/* tags */
-.tags{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:6px;
-}
-.tag{
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:600;
-  border:1px solid #e8d3c2;
-  background:#fff7ef;
-  color:#6a3d1f;
-}
-.tag.dairy{
-  border-color:#ead7c9;
-  background:#fff1e6;
-}
-
-/* Workshops */
-.section{
-  margin-top:55px;
-}
-.section-title{
-  text-align:center;
-  font-size:34px;
-  font-weight:700;
-  color:#6a3d1f;
-  margin:0 0 10px 0;
-}
-.section-text{
-  text-align:center;
-  color:#6b5442;
-  line-height:1.75;
-  font-size:16px;
-  max-width:860px;
-  margin:0 auto 22px auto;
-}
-
-.ws-btn{
-  margin-top:12px;
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:14px;
-  background:#6a3d1f;
-  color:#fff;
-  font-weight:800;
-  cursor:pointer;
-}
-.ws-btn:hover{ background:#5f3821; }
-
-/* Order box */
 .box{
   margin-top:40px;
   background:#fffaf3;
@@ -246,11 +190,11 @@ input, textarea{
 }
 
 .hint{
-  margin-top:10px;
+  margin-top:14px;
   font-size:14px;
   text-align:center;
   color:#7a6653;
-  line-height:1.6;
+  line-height:1.7;
 }
 
 .rule{
@@ -282,20 +226,9 @@ input, textarea{
 </header>
 
 <main>
-  <!-- מוצרים -->
+
   <div class="grid" id="products"></div>
 
-  <!-- סדנאות -->
-  <div class="section">
-    <h2 class="section-title">סדנאות מחמצת</h2>
-    <div class="section-text">
-      סדנאות באווירה כפרית וחמה — עם טאבון, בצק מחמצת, והמון טיפים שתיקחו הביתה.
-      ההרשמה היא בקשה: מזמינים לפחות שבוע מראש וממתינים לאישור בווטסאפ חוזר.
-    </div>
-    <div class="grid" id="workshops"></div>
-  </div>
-
-  <!-- פרטי הזמנה -->
   <div class="box">
     <h2>פרטי הזמנה</h2>
 
@@ -305,9 +238,9 @@ input, textarea{
 
     <select id="pickupLocation">
       <option value="">בחירת נקודת איסוף…</option>
-      <option value="דולב">דולב — להזמין לילה לפני. אין איסוף לחמים ביום ראשון (מאפינס אפשר)</option>
+      <option value="דולב">דולב — להזמין מראש. אין איסוף לחמים ביום ראשון</option>
       <option value="בית שמש">בית שמש — בית משפחת מוריס (יש לברר בפרטי את יום האיסוף)</option>
-      <option value="גבעות עדן">גבעות עדן — בית משפחת מוריס (יונתן ואליטל) (יש לברר בפרטי את יום האיסוף)</option>
+      <option value="גבעות עדן">גבעות עדן — בית משפחת מוריס (יונתן ואליטל)</option>
     </select>
 
     <div class="rule" id="ruleMsg"></div>
@@ -317,10 +250,17 @@ input, textarea{
     <div class="total">סה״כ: ₪<span id="total">0</span></div>
     <button class="btn" id="sendBtn" type="button">שליחת הזמנה ב-WhatsApp</button>
 
-    <div class="hint">הזמנה יום מראש • אין איסוף ביום ראשון</div>
+    <div class="hint">
+      אני אופה במיוחד לכל הזמנה ✨<br>
+      כיכר לחם מחמצת עוברת תהליך של כ־48 שעות הכנה.<br>
+      הזמנות מתקבלות עד יומיים מראש.<br>
+      להזמנה ליום שני – ניתן להזמין עד יום ראשון בשעה 12:00 בצהריים.
+    </div>
+
   </div>
+
 </main>
 
-<script src="app.js?v=999"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>

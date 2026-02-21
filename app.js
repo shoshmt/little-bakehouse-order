@@ -12,8 +12,14 @@ const PRODUCTS = [
 
   { id:"mix_rolls",     name:"מיקס לחמניות מחמצת",       price:45, img:"rolls-mix.jpg",     kind:"bread", type:"mix" },
 
-  // אם תרצי (מהשיחה הקודמת): וופל בלגי מחמצת — מארז 4
-  // { id:"waffle_pack",   name:"וופל בלגי מחמצת (חלבי) – מארז 4 יח׳", price:60, img:"waffle-belgian.jpg", kind:"bread" },
+  // ✅ וופל בלגי מחמצת – חלבי, מארז 4
+  { 
+    id:"waffle_pack",
+    name:"וופל בלגי מחמצת (חלבי) – מארז 4 יח׳",
+    price:60,
+    img:"waffle-belgian.jpg",
+    kind:"bread"
+  },
 ];
 
 /* =======================

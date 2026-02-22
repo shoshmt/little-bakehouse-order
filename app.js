@@ -207,15 +207,13 @@ function buildCards(){
       : "";
 
     card.innerHTML = `
-      <img src="${p.img}" alt="${p.name}">
-      <div class="name">${p.name}</div>
-      <div class="price">₪${p.price}</div>
-      ${p.dairy ? '<div style="color:#7a6653;font-size:13px;">חלבי</div>' : ''}
-      ${extra}
-      <div class="row" style="margin-top:10px;">
-        <div style="color:#7a6653;font-size:13px;">כמות</div>
-        <input type="number" min="0" value="0" id="qty_${p.id}">
-      </div>
+  <img src="${group.defaultImg}" alt="${group.title}">
+  <div class="name">${group.title}</div>
+  <div class="price">${group.subtitle}</div>
+  <div style="color:#7a6653;font-size:13px;">חלבי</div>
+  <div style="margin-top:8px; color:#7a6653; font-size:13px; line-height:1.6;">
+    מינימום הזמנה: ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם.
+  </div>
     `;
 
     const qtyInput = card.querySelector(`#qty_${p.id}`);

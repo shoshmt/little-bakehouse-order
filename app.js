@@ -1,31 +1,25 @@
 const WHATSAPP_NUMBER = "972509066634";
 
 /* =======================
-   1) מוצרים רגילים (לחמים + מיקס לחמניות)
+   1) מוצרים רגילים (לחמים + מיקס לחמניות + וופל)
    ======================= */
 const PRODUCTS = [
   { id:"classic",       name:"לחם מחמצת קלאסי",          price:45, img:"classic.jpg",       kind:"bread" },
   { id:"onion",         name:"לחם מחמצת בצל",            price:45, img:"onion.jpg",         kind:"bread" },
-  { id:"cheddar",       name:"לחם מחמצת צ'דר",           price:45, img:"cheddar.jpg",       kind:"bread" },
-  { id:"cheese_chili",  name:"לחם מחמצת גבינה וצ'ילי",   price:45, img:"cheese_chili.jpg",  kind:"bread" },
-  { id:"cheese_onion",  name:"לחם מחמצת גבינה ובצל",     price:45, img:"cheese_onion.jpg",  kind:"bread" },
+
+  // חלבי:
+  { id:"cheddar",       name:"לחם מחמצת צ'דר",           price:45, img:"cheddar.jpg",       kind:"bread", dairy:true },
+  { id:"cheese_chili",  name:"לחם מחמצת גבינה וצ'ילי",   price:45, img:"cheese_chili.jpg",  kind:"bread", dairy:true },
+  { id:"cheese_onion",  name:"לחם מחמצת גבינה ובצל",     price:45, img:"cheese_onion.jpg",  kind:"bread", dairy:true },
 
   { id:"mix_rolls",     name:"מיקס לחמניות מחמצת",       price:45, img:"rolls-mix.jpg",     kind:"bread", type:"mix" },
 
-  // ✅ וופל בלגי מחמצת – חלבי, מארז 4
-  { 
-    id:"waffle_pack",
-    name:"וופל בלגי מחמצת (חלבי) – מארז 4 יח׳",
-    price:60,
-    img:"waffle-belgian.jpg",
-    kind:"bread"
-  },
+  // וופל (חלבי) — מארז 4
+  { id:"waffle_pack",   name:"וופל בלגי מחמצת (חלבי) – מארז 4 יח׳", price:60, img:"waffle-belgian.jpg", kind:"bread", dairy:true },
 ];
 
 /* =======================
-   2) מאפינס — 2 קבוצות דיפולט עם פתיחה
-   הערה: available=false => לא יוצג ללקוח ולא יחושב
-   חוק חדש: מינימום 4 מאותו הטעם (ללא שילובים)
+   2) מאפינס — מינימום 4 מאותו הטעם
    ======================= */
 const MUFFIN_MIN_PER_FLAVOR = 4;
 
@@ -42,8 +36,8 @@ const MUFFIN_GROUPS = [
       { id:"muffin_choc",        label:"מאפינס שוקולד",            price:12, available:true },
       { id:"muffin_apple",       label:"מאפינס תפוח קינמון",       price:12, available:true },
       { id:"muffin_vanilla",     label:"מאפינס וניל־אספרסו",       price:12, available:true },
-      { id:"muffin_strawberry",  label:"מאפינס תות (בעונה)",       price:12, available:true },  // לשנות false כשלא בעונה
-      { id:"muffin_blueberry",   label:"מאפינס אוכמניות (בעונה)",  price:12, available:true },  // לשנות false כשלא בעונה
+      { id:"muffin_strawberry",  label:"מאפינס תות (בעונה)",       price:12, available:true },
+      { id:"muffin_blueberry",   label:"מאפינס אוכמניות (בעונה)",  price:12, available:true },
     ]
   },
   {
@@ -55,8 +49,8 @@ const MUFFIN_GROUPS = [
       { id:"muffin_choc_sf",        label:"מאפינס שוקולד ללא סוכר",              price:15, available:true },
       { id:"muffin_apple_sf",       label:"מאפינס תפוח קינמון ללא סוכר",         price:15, available:true },
       { id:"muffin_vanilla_sf",     label:"מאפינס וניל־אספרסו ללא סוכר",         price:15, available:true },
-      { id:"muffin_strawberry_sf",  label:"מאפינס תות ללא סוכר (בעונה)",         price:15, available:true }, // לשנות false כשלא בעונה
-      { id:"muffin_blueberry_sf",   label:"מאפינס אוכמניות ללא סוכר (בעונה)",    price:15, available:true }, // לשנות false כשלא בעונה
+      { id:"muffin_strawberry_sf",  label:"מאפינס תות ללא סוכר (בעונה)",         price:15, available:true },
+      { id:"muffin_blueberry_sf",   label:"מאפינס אוכמניות ללא סוכר (בעונה)",    price:15, available:true },
     ]
   }
 ];
@@ -110,10 +104,50 @@ function isSunday(dateStr){
 }
 
 /* =======================
+   חלון הזמנה: יומיים מראש
+   חריג: ליום שני עד יום ראשון 12:00
+   ======================= */
+function getOrderDeadline(dateStr){
+  const pickup = new Date(dateStr + "T00:00:00");
+
+  // Monday exception
+  if(pickup.getDay() === 1){
+    const deadline = new Date(pickup);
+    deadline.setDate(deadline.getDate() - 1); // Sunday
+    deadline.setHours(12, 0, 0, 0); // 12:00
+    return deadline;
+  }
+
+  // Default: 2 days before, end of day
+  const deadline = new Date(pickup);
+  deadline.setDate(deadline.getDate() - 2);
+  deadline.setHours(23, 59, 0, 0);
+  return deadline;
+}
+
+function formatDeadline(deadline){
+  const date = deadline.toLocaleDateString("he-IL");
+  const time = deadline.toLocaleTimeString("he-IL", { hour:"2-digit", minute:"2-digit" });
+  return `${date} בשעה ${time}`;
+}
+
+function isOrderWindowOpen(dateStr){
+  if(!dateStr) return true;
+
+  const now = new Date();
+  const pickup = new Date(dateStr + "T00:00:00");
+  const deadline = getOrderDeadline(dateStr);
+
+  // No ordering for past/same day
+  if(now >= pickup) return false;
+
+  return now <= deadline;
+}
+
+/* =======================
    חוק מאפינס: מינימום 4 לכל טעם
    ======================= */
 function getMuffinViolations(){
-  // מחזיר מערך של טעמים שהוזמנו 1–3
   const bad = [];
 
   MUFFIN_GROUPS.forEach(group=>{
@@ -131,7 +165,6 @@ function getMuffinViolations(){
 }
 
 function updateMuffinInlineWarnings(){
-  // מציג/מסתיר הודעת "מינימום 4" מתחת לכל טעם
   MUFFIN_GROUPS.forEach(group=>{
     group.options
       .filter(opt => opt.available !== false)
@@ -177,8 +210,9 @@ function buildCards(){
       <img src="${p.img}" alt="${p.name}">
       <div class="name">${p.name}</div>
       <div class="price">₪${p.price}</div>
+      ${p.dairy ? '<div style="color:#7a6653;font-size:13px;">חלבי</div>' : ''}
       ${extra}
-      <div class="row">
+      <div class="row" style="margin-top:10px;">
         <div style="color:#7a6653;font-size:13px;">כמות</div>
         <input type="number" min="0" value="0" id="qty_${p.id}">
       </div>
@@ -222,7 +256,7 @@ function buildCards(){
       <div class="name">${group.title}</div>
       <div class="price">${group.subtitle}</div>
       <div style="margin-top:8px; color:#7a6653; font-size:13px; line-height:1.6;">
-       4 מינימום הזמנה: ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם 
+        מינימום הזמנה: ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם.
       </div>
 
       <details style="margin-top:10px;" ${visibleOptions.length ? "" : "open"}>
@@ -255,7 +289,6 @@ function buildCards(){
 
 /* =======================
    רינדור סדנאות
-   דורש באינדקס: <div class="grid" id="workshops"></div>
    ======================= */
 function renderWorkshops(){
   const wsGrid = document.getElementById("workshops");
@@ -271,7 +304,7 @@ function renderWorkshops(){
       <img src="${w.img}" alt="${w.title}">
       <div class="name">${w.title}</div>
       <div class="price">₪${w.price}</div>
-      <div style="color:#6b5442; line-height:1.7; font-size:15px;">${w.desc}</div>
+      <div style="color:#6b5442; line-height:1.7; font-size:15px; margin-top:6px;">${w.desc}</div>
       <div style="margin-top:10px; color:#7a6653; font-size:13px; line-height:1.6;">
         יש להזמין שבוע מראש ולהמתין לקבלת אישור בווטסאפ חוזר.
       </div>
@@ -307,25 +340,21 @@ function requestWorkshop(workshopId){
 }
 
 /* =======================
-   חישוב סה"כ + עגלת מאפינס
+   חישוב סה"כ
    ======================= */
 function calcTotal(){
   let total = 0;
 
-  // מוצרים רגילים
   PRODUCTS.forEach(p=>{
-    const el = document.getElementById("qty_"+p.id);
-    const qty = parseInt(el?.value, 10) || 0;
+    const qty = parseInt(document.getElementById("qty_"+p.id)?.value, 10) || 0;
     total += qty * p.price;
   });
 
-  // מאפינס (רק זמינים)
   MUFFIN_GROUPS.forEach(group=>{
     group.options
       .filter(opt => opt.available !== false)
       .forEach(opt=>{
-        const el = document.getElementById("qty_"+opt.id);
-        const qty = parseInt(el?.value, 10) || 0;
+        const qty = parseInt(document.getElementById("qty_"+opt.id)?.value, 10) || 0;
         total += qty * opt.price;
       });
   });
@@ -353,7 +382,10 @@ function hasAnyBreadInCart(){
 }
 
 /* =======================
-   חוקים חכמים (דולב+ראשון לחמים) + מינימום מאפינס
+   חוקים חכמים:
+   1) דולב + ראשון + יש לחם => חסימה
+   2) מינימום מאפינס לכל טעם
+   3) חלון הזמנה לפי תאריך (יומיים מראש, חריג שני)
    ======================= */
 function updateRulesUI(){
   const msgEl = document.getElementById("ruleMsg");
@@ -366,19 +398,27 @@ function updateRulesUI(){
   let blocked = false;
   let msg = "";
 
-  // חוק דולב/ראשון/לחמים
+  // 1) דולב + ראשון + יש לחם
   if(pickupLocation === "דולב" && isSunday(dateStr) && hasAnyBreadInCart()){
     blocked = true;
     msg = "בדולב אין איסוף לחמים/לחמניות ביום ראשון. אפשר לבחור תאריך אחר או להזמין מאפינס בלבד.";
   }
 
-  // חוק מינימום מאפינס לכל טעם
+  // 2) מינימום מאפינס לכל טעם
   if(!blocked){
     const violations = getMuffinViolations();
     if(violations.length){
       blocked = true;
-      // מציגים טעם אחד (הראשון) כדי לא להציף
-      msg = `מינימום הזמנה למאפינס הוא ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם (ללא שילובים). חסר לך בטעם: "${violations[0].label}".`;
+      msg = `מינימום הזמנה למאפינס הוא ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם. חסר לך בטעם: "${violations[0].label}".`;
+    }
+  }
+
+  // 3) חלון הזמנה
+  if(!blocked && dateStr){
+    if(!isOrderWindowOpen(dateStr)){
+      const deadline = getOrderDeadline(dateStr);
+      blocked = true;
+      msg = `הזמנות לתאריך הזה נסגרו. ניתן להזמין עד ${formatDeadline(deadline)}.`;
     }
   }
 
@@ -427,16 +467,15 @@ function sendOrder(){
     return;
   }
 
-  // חוק מאפינס (גיבוי נוסף)
+  // גיבוי נוסף לחוק מאפינס
   const violations = getMuffinViolations();
   if(violations.length){
-    alert(`מינימום הזמנה למאפינס הוא ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם (ללא שילובים). חסר לך בטעם: "${violations[0].label}".`);
+    alert(`מינימום הזמנה למאפינס הוא ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם. חסר לך בטעם: "${violations[0].label}".`);
     return;
   }
 
   let message = "הזמנה חדשה:\n\n";
 
-  // מוצרים רגילים
   PRODUCTS.forEach(p=>{
     const qty = parseInt(document.getElementById("qty_"+p.id)?.value, 10) || 0;
     if(qty > 0){
@@ -449,7 +488,6 @@ function sendOrder(){
     }
   });
 
-  // מאפינס — לפי קבוצות (רק זמינים)
   MUFFIN_GROUPS.forEach(group=>{
     const chosen = group.options
       .filter(opt => opt.available !== false)
@@ -464,7 +502,6 @@ function sendOrder(){
     }
   });
 
-  // פרטים
   message += `\nשם: ${name}\n`;
   message += `טלפון: ${phone}\n`;
   message += `נקודת איסוף: ${pickupLocation}\n`;
@@ -483,7 +520,6 @@ calcTotal();
 updateMuffinInlineWarnings();
 updateRulesUI();
 
-// כפתורים/שדות
 const sendBtn = document.getElementById("sendBtn");
 if(sendBtn) sendBtn.addEventListener("click", sendOrder);
 

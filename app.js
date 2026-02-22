@@ -1,30 +1,30 @@
 const WHATSAPP_NUMBER = "972509066634";
 
 /* =======================
-   1) מוצרים רגילים (לחמים + מיקס לחמניות + וופל)
+   הגדרות
+   ======================= */
+const MUFFIN_MIN_PER_FLAVOR = 4;
+
+const MUFFIN_IMG_WITH_SUGAR = "muffins-with-sugar.jpg";
+const MUFFIN_IMG_NO_SUGAR   = "muffins-no-sugar.jpg";
+
+/* =======================
+   מוצרים
    ======================= */
 const PRODUCTS = [
   { id:"classic",       name:"לחם מחמצת קלאסי",          price:45, img:"classic.jpg",       kind:"bread" },
   { id:"onion",         name:"לחם מחמצת בצל",            price:45, img:"onion.jpg",         kind:"bread" },
 
-  // חלבי:
+  // חלביים:
   { id:"cheddar",       name:"לחם מחמצת צ'דר",           price:45, img:"cheddar.jpg",       kind:"bread", dairy:true },
   { id:"cheese_chili",  name:"לחם מחמצת גבינה וצ'ילי",   price:45, img:"cheese_chili.jpg",  kind:"bread", dairy:true },
   { id:"cheese_onion",  name:"לחם מחמצת גבינה ובצל",     price:45, img:"cheese_onion.jpg",  kind:"bread", dairy:true },
 
   { id:"mix_rolls",     name:"מיקס לחמניות מחמצת",       price:45, img:"rolls-mix.jpg",     kind:"bread", type:"mix" },
 
-  // וופל (חלבי) — מארז 4
-  { id:"waffle_pack",   name:"וופל בלגי מחמצת (חלבי) – מארז 4 יח׳", price:60, img:"waffle-belgian.jpg", kind:"bread", dairy:true },
+  // וופל חלבּי — מארז 4
+  { id:"waffle_pack",   name:"וופל בלגי מחמצת – מארז 4 יח׳", price:60, img:"waffle-belgian.jpg", kind:"bread", dairy:true },
 ];
-
-/* =======================
-   2) מאפינס — מינימום 4 מאותו הטעם
-   ======================= */
-const MUFFIN_MIN_PER_FLAVOR = 4;
-
-const MUFFIN_IMG_WITH_SUGAR = "muffins-with-sugar.jpg";
-const MUFFIN_IMG_NO_SUGAR   = "muffins-no-sugar.jpg";
 
 const MUFFIN_GROUPS = [
   {
@@ -32,6 +32,7 @@ const MUFFIN_GROUPS = [
     title: "מאפינס עם סוכר",
     subtitle: "₪12 ליחידה",
     defaultImg: MUFFIN_IMG_WITH_SUGAR,
+    dairy: true,
     options: [
       { id:"muffin_choc",        label:"מאפינס שוקולד",            price:12, available:true },
       { id:"muffin_apple",       label:"מאפינס תפוח קינמון",       price:12, available:true },
@@ -45,6 +46,7 @@ const MUFFIN_GROUPS = [
     title: "מאפינס בלי סוכר",
     subtitle: "₪15 ליחידה",
     defaultImg: MUFFIN_IMG_NO_SUGAR,
+    dairy: true,
     options: [
       { id:"muffin_choc_sf",        label:"מאפינס שוקולד ללא סוכר",              price:15, available:true },
       { id:"muffin_apple_sf",       label:"מאפינס תפוח קינמון ללא סוכר",         price:15, available:true },
@@ -56,7 +58,7 @@ const MUFFIN_GROUPS = [
 ];
 
 /* =======================
-   3) סדנאות מחמצת
+   סדנאות
    ======================= */
 const WORKSHOPS = [
   {
@@ -83,14 +85,14 @@ const WORKSHOPS = [
 ];
 
 /* =======================
-   עזרי DOM
+   DOM helpers
    ======================= */
-const grid = document.getElementById("products");
+const productsGrid = document.getElementById("products");
 
-function getVal(id){ return (document.getElementById(id)?.value || ""); }
-function setText(id, txt){ const el=document.getElementById(id); if(el) el.innerText = txt; }
+function $(id){ return document.getElementById(id); }
+function val(id){ return ($(id)?.value || ""); }
 
-function normalizeNumberInput(el){
+function normalizeNumber(el){
   let v = parseInt(el.value, 10);
   if(!Number.isFinite(v) || v < 0) v = 0;
   el.value = v;
@@ -110,107 +112,109 @@ function isSunday(dateStr){
 function getOrderDeadline(dateStr){
   const pickup = new Date(dateStr + "T00:00:00");
 
-  // Monday exception
+  // יום שני: עד יום ראשון 12:00
   if(pickup.getDay() === 1){
-    const deadline = new Date(pickup);
-    deadline.setDate(deadline.getDate() - 1); // Sunday
-    deadline.setHours(12, 0, 0, 0); // 12:00
-    return deadline;
+    const dl = new Date(pickup);
+    dl.setDate(dl.getDate() - 1);
+    dl.setHours(12, 0, 0, 0);
+    return dl;
   }
 
-  // Default: 2 days before, end of day
-  const deadline = new Date(pickup);
-  deadline.setDate(deadline.getDate() - 2);
-  deadline.setHours(23, 59, 0, 0);
-  return deadline;
+  // ברירת מחדל: יומיים לפני עד 23:59
+  const dl = new Date(pickup);
+  dl.setDate(dl.getDate() - 2);
+  dl.setHours(23, 59, 0, 0);
+  return dl;
 }
 
-function formatDeadline(deadline){
-  const date = deadline.toLocaleDateString("he-IL");
-  const time = deadline.toLocaleTimeString("he-IL", { hour:"2-digit", minute:"2-digit" });
+function formatDeadline(dl){
+  const date = dl.toLocaleDateString("he-IL");
+  const time = dl.toLocaleTimeString("he-IL", { hour:"2-digit", minute:"2-digit" });
   return `${date} בשעה ${time}`;
 }
 
 function isOrderWindowOpen(dateStr){
   if(!dateStr) return true;
-
   const now = new Date();
   const pickup = new Date(dateStr + "T00:00:00");
-  const deadline = getOrderDeadline(dateStr);
-
-  // No ordering for past/same day
   if(now >= pickup) return false;
-
-  return now <= deadline;
+  return now <= getOrderDeadline(dateStr);
 }
 
 /* =======================
-   חוק מאפינס: מינימום 4 לכל טעם
+   מאפינס: מינימום 4 לכל טעם
    ======================= */
-function getMuffinViolations(){
+function muffinViolations(){
   const bad = [];
-
-  MUFFIN_GROUPS.forEach(group=>{
-    group.options
-      .filter(opt => opt.available !== false)
-      .forEach(opt=>{
-        const qty = parseInt(document.getElementById("qty_"+opt.id)?.value, 10) || 0;
-        if(qty > 0 && qty < MUFFIN_MIN_PER_FLAVOR){
-          bad.push({ label: opt.label, qty });
-        }
-      });
+  MUFFIN_GROUPS.forEach(g=>{
+    g.options.filter(o=>o.available!==false).forEach(o=>{
+      const q = parseInt($(`qty_${o.id}`)?.value, 10) || 0;
+      if(q > 0 && q < MUFFIN_MIN_PER_FLAVOR){
+        bad.push({ label:o.label, qty:q });
+      }
+    });
   });
-
   return bad;
 }
 
-function updateMuffinInlineWarnings(){
-  MUFFIN_GROUPS.forEach(group=>{
-    group.options
-      .filter(opt => opt.available !== false)
-      .forEach(opt=>{
-        const qty = parseInt(document.getElementById("qty_"+opt.id)?.value, 10) || 0;
-        const warnEl = document.getElementById("warn_"+opt.id);
-        if(!warnEl) return;
+function updateMuffinWarnings(){
+  MUFFIN_GROUPS.forEach(g=>{
+    g.options.filter(o=>o.available!==false).forEach(o=>{
+      const q = parseInt($(`qty_${o.id}`)?.value, 10) || 0;
+      const warn = $(`warn_${o.id}`);
+      if(!warn) return;
 
-        if(qty > 0 && qty < MUFFIN_MIN_PER_FLAVOR){
-          warnEl.style.display = "block";
-          warnEl.textContent = `מינימום ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם (כרגע ${qty}).`;
-        } else {
-          warnEl.style.display = "none";
-          warnEl.textContent = "";
-        }
-      });
+      if(q > 0 && q < MUFFIN_MIN_PER_FLAVOR){
+        warn.style.display = "block";
+        warn.textContent = `מינימום ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם (כרגע ${q}).`;
+      } else {
+        warn.style.display = "none";
+        warn.textContent = "";
+      }
+    });
   });
 }
 
 /* =======================
-   בניית כרטיסים: מוצרים + מאפינס
+   בדיקות סל
    ======================= */
-function buildCards(){
-  if(!grid) return;
-  grid.innerHTML = "";
+function anyItemsInCart(){
+  const anyRegular = PRODUCTS.some(p => (parseInt($(`qty_${p.id}`)?.value, 10) || 0) > 0);
+  const anyMuffins = MUFFIN_GROUPS.some(g => g.options.filter(o=>o.available!==false).some(o => (parseInt($(`qty_${o.id}`)?.value, 10) || 0) > 0));
+  return anyRegular || anyMuffins;
+}
+
+function hasAnyBread(){
+  return PRODUCTS.some(p => {
+    const q = parseInt($(`qty_${p.id}`)?.value, 10) || 0;
+    return p.kind === "bread" && q > 0;
+  });
+}
+
+/* =======================
+   בניית כרטיסים
+   ======================= */
+function buildProductsAndMuffins(){
+  if(!productsGrid) return;
+  productsGrid.innerHTML = "";
 
   // מוצרים רגילים
   PRODUCTS.forEach(p=>{
     const card = document.createElement("div");
     card.className = "card";
 
-    const extra = (p.type === "mix")
-      ? `
-        <select id="flour_${p.id}">
-          <option value="">בחירת קמח…</option>
-          <option value="קמח לבן">קמח לבן</option>
-          <option value="קמח כוסמין">קמח כוסמין</option>
-        </select>
-      `
-      : "";
+    const extra = (p.type === "mix") ? `
+      <select id="flour_${p.id}">
+        <option value="">בחירת קמח…</option>
+        <option value="קמח לבן">קמח לבן</option>
+        <option value="קמח כוסמין">קמח כוסמין</option>
+      </select>
+    ` : "";
 
     card.innerHTML = `
       <img src="${p.img}" alt="${p.name}">
       <div class="name">${p.name}</div>
       <div class="price">₪${p.price}</div>
-      <div style="color:#7a6653;font-size:13px;">חלבי</div>
       ${p.dairy ? '<div style="color:#7a6653;font-size:13px;">חלבי</div>' : ''}
       ${extra}
       <div class="row" style="margin-top:10px;">
@@ -219,9 +223,9 @@ function buildCards(){
       </div>
     `;
 
-    const qtyInput = card.querySelector(`#qty_${p.id}`);
-    qtyInput.addEventListener("input", () => {
-      normalizeNumberInput(qtyInput);
+    const qtyEl = card.querySelector(`#qty_${p.id}`);
+    qtyEl.addEventListener("input", () => {
+      normalizeNumber(qtyEl);
       calcTotal();
       updateRulesUI();
     });
@@ -234,57 +238,52 @@ function buildCards(){
       });
     }
 
-    grid.appendChild(card);
+    productsGrid.appendChild(card);
   });
 
-  // כרטיסי מאפינס קבוצתיים
-  MUFFIN_GROUPS.forEach(group=>{
+  // מאפינס (חלבי תמיד)
+  MUFFIN_GROUPS.forEach(g=>{
     const card = document.createElement("div");
     card.className = "card";
 
-    const visibleOptions = group.options.filter(opt => opt.available !== false);
+    const opts = g.options.filter(o=>o.available!==false);
 
-    const optionsHtml = visibleOptions.map(opt => `
+    const optionsHtml = opts.map(o => `
       <div class="row" style="margin-top:10px;">
-        <div style="flex:1; color:#3e2f23; font-size:15px;">${opt.label}</div>
-        <input type="number" min="0" value="0" id="qty_${opt.id}" style="width:120px;text-align:center;">
+        <div style="flex:1; color:#3e2f23; font-size:15px;">${o.label}</div>
+        <input type="number" min="0" value="0" id="qty_${o.id}" style="width:120px;text-align:center;">
       </div>
-      <div id="warn_${opt.id}" style="display:none; margin-top:6px; color:#6b2d1a; background:#fff1e6; border:1px solid #f0c9b0; padding:8px 10px; border-radius:10px; font-size:13px; line-height:1.5;"></div>
+      <div id="warn_${o.id}" style="display:none; margin-top:6px; color:#6b2d1a; background:#fff1e6; border:1px solid #f0c9b0; padding:8px 10px; border-radius:10px; font-size:13px; line-height:1.5;"></div>
     `).join("");
 
     card.innerHTML = `
-      <img src="${group.defaultImg}" alt="${group.title}">
-      <div class="name">${group.title}</div>
-      <div class="price">${group.subtitle}</div>
+      <img src="${g.defaultImg}" alt="${g.title}">
+      <div class="name">${g.title}</div>
+      <div class="price">${g.subtitle}</div>
+      <div style="color:#7a6653;font-size:13px;">חלבי</div>
       <div style="margin-top:8px; color:#7a6653; font-size:13px; line-height:1.6;">
         מינימום הזמנה: ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם.
       </div>
 
-      <details style="margin-top:10px;" ${visibleOptions.length ? "" : "open"}>
+      <details style="margin-top:10px;">
         <summary style="cursor:pointer;color:#6a3d1f;font-weight:600;">בחירת טעמים</summary>
         <div style="margin-top:8px;">
-          ${
-            visibleOptions.length
-              ? optionsHtml
-              : `<div style="color:#7a6653;font-size:14px;line-height:1.6;">
-                   כרגע אין טעמים זמינים בקבוצה הזו 🙏🏼
-                 </div>`
-          }
+          ${optionsHtml}
         </div>
       </details>
     `;
 
-    visibleOptions.forEach(opt=>{
-      const el = card.querySelector(`#qty_${opt.id}`);
+    opts.forEach(o=>{
+      const el = card.querySelector(`#qty_${o.id}`);
       el.addEventListener("input", () => {
-        normalizeNumberInput(el);
+        normalizeNumber(el);
         calcTotal();
-        updateMuffinInlineWarnings();
+        updateMuffinWarnings();
         updateRulesUI();
       });
     });
 
-    grid.appendChild(card);
+    productsGrid.appendChild(card);
   });
 }
 
@@ -292,15 +291,13 @@ function buildCards(){
    רינדור סדנאות
    ======================= */
 function renderWorkshops(){
-  const wsGrid = document.getElementById("workshops");
+  const wsGrid = $("workshops");
   if(!wsGrid) return;
 
   wsGrid.innerHTML = "";
-
   WORKSHOPS.forEach(w=>{
     const card = document.createElement("div");
     card.className = "card";
-
     card.innerHTML = `
       <img src="${w.img}" alt="${w.title}">
       <div class="name">${w.title}</div>
@@ -309,12 +306,10 @@ function renderWorkshops(){
       <div style="margin-top:10px; color:#7a6653; font-size:13px; line-height:1.6;">
         יש להזמין שבוע מראש ולהמתין לקבלת אישור בווטסאפ חוזר.
       </div>
-      <button class="ws-btn" type="button" data-ws="${w.id}">בקשת הרשמה לסדנה</button>
+      <button class="ws-btn" type="button">בקשת הרשמה לסדנה</button>
     `;
 
-    const btn = card.querySelector(".ws-btn");
-    btn.addEventListener("click", () => requestWorkshop(w.id));
-
+    card.querySelector(".ws-btn").addEventListener("click", () => requestWorkshop(w.id));
     wsGrid.appendChild(card);
   });
 }
@@ -323,21 +318,20 @@ function requestWorkshop(workshopId){
   const w = WORKSHOPS.find(x => x.id === workshopId);
   if(!w) return;
 
-  const name  = getVal("custName").trim();
-  const phone = getVal("custPhone").trim();
-  const notes = getVal("notes").trim();
+  const name  = val("custName").trim();
+  const phone = val("custPhone").trim();
+  const notes = val("notes").trim();
 
   if(!name){ alert("כדי לשלוח בקשת סדנה, נא למלא שם מלא"); return; }
   if(phone.length < 7){ alert("כדי לשלוח בקשת סדנה, נא למלא מספר טלפון תקין"); return; }
 
-  let message = `בקשת הרשמה לסדנאות מחמצת:\n\n`;
-  message += `${w.title} — ₪${w.price}\n\n`;
-  message += `שם: ${name}\n`;
-  message += `טלפון: ${phone}\n`;
-  if(notes) message += `הערות: ${notes}\n`;
-  message += `\nלתשומת לב: הזמנה לפחות שבוע מראש. הבקשה ממתינה לאישור בווטסאפ חוזר.`;
+  let msg = `בקשת הרשמה לסדנאות מחמצת:\n\n`;
+  msg += `${w.title} — ₪${w.price}\n\n`;
+  msg += `שם: ${name}\nטלפון: ${phone}\n`;
+  if(notes) msg += `הערות: ${notes}\n`;
+  msg += `\nלתשומת לב: הזמנה לפחות שבוע מראש. הבקשה ממתינה לאישור בווטסאפ חוזר.`;
 
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
 }
 
 /* =======================
@@ -347,79 +341,54 @@ function calcTotal(){
   let total = 0;
 
   PRODUCTS.forEach(p=>{
-    const qty = parseInt(document.getElementById("qty_"+p.id)?.value, 10) || 0;
-    total += qty * p.price;
+    const q = parseInt($(`qty_${p.id}`)?.value, 10) || 0;
+    total += q * p.price;
   });
 
-  MUFFIN_GROUPS.forEach(group=>{
-    group.options
-      .filter(opt => opt.available !== false)
-      .forEach(opt=>{
-        const qty = parseInt(document.getElementById("qty_"+opt.id)?.value, 10) || 0;
-        total += qty * opt.price;
-      });
+  MUFFIN_GROUPS.forEach(g=>{
+    g.options.filter(o=>o.available!==false).forEach(o=>{
+      const q = parseInt($(`qty_${o.id}`)?.value, 10) || 0;
+      total += q * o.price;
+    });
   });
 
-  setText("total", total);
-}
-
-function anyItemsInCart(){
-  const anyRegular = PRODUCTS.some(p => (parseInt(document.getElementById("qty_"+p.id)?.value, 10) || 0) > 0);
-
-  const anyMuffins = MUFFIN_GROUPS.some(g =>
-    g.options
-      .filter(opt => opt.available !== false)
-      .some(opt => (parseInt(document.getElementById("qty_"+opt.id)?.value, 10) || 0) > 0)
-  );
-
-  return anyRegular || anyMuffins;
-}
-
-function hasAnyBreadInCart(){
-  return PRODUCTS.some(p => {
-    const q = parseInt(document.getElementById("qty_"+p.id)?.value, 10) || 0;
-    return p.kind === "bread" && q > 0;
-  });
+  if($("total")) $("total").innerText = total;
 }
 
 /* =======================
-   חוקים חכמים:
-   1) דולב + ראשון + יש לחם => חסימה
-   2) מינימום מאפינס לכל טעם
-   3) חלון הזמנה לפי תאריך (יומיים מראש, חריג שני)
+   חוקים חכמים + הודעה ללקוח
    ======================= */
 function updateRulesUI(){
-  const msgEl = document.getElementById("ruleMsg");
-  const btnEl = document.getElementById("sendBtn");
+  const msgEl = $("ruleMsg");
+  const btnEl = $("sendBtn");
   if(!msgEl || !btnEl) return;
 
-  const pickupLocation = getVal("pickupLocation");
-  const dateStr = getVal("pickupDate");
+  const pickupLocation = val("pickupLocation");
+  const dateStr = val("pickupDate");
 
   let blocked = false;
   let msg = "";
 
-  // 1) דולב + ראשון + יש לחם
-  if(pickupLocation === "דולב" && isSunday(dateStr) && hasAnyBreadInCart()){
+  // דולב + ראשון + יש לחם
+  if(pickupLocation === "דולב" && isSunday(dateStr) && hasAnyBread()){
     blocked = true;
     msg = "בדולב אין איסוף לחמים/לחמניות ביום ראשון. אפשר לבחור תאריך אחר או להזמין מאפינס בלבד.";
   }
 
-  // 2) מינימום מאפינס לכל טעם
+  // מאפינס מינימום 4 לכל טעם
   if(!blocked){
-    const violations = getMuffinViolations();
-    if(violations.length){
+    const v = muffinViolations();
+    if(v.length){
       blocked = true;
-      msg = `מינימום הזמנה למאפינס הוא ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם. חסר לך בטעם: "${violations[0].label}".`;
+      msg = `מינימום הזמנה למאפינס הוא ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם. חסר לך בטעם: "${v[0].label}".`;
     }
   }
 
-  // 3) חלון הזמנה
+  // חלון הזמנה לפי תאריך
   if(!blocked && dateStr){
     if(!isOrderWindowOpen(dateStr)){
-      const deadline = getOrderDeadline(dateStr);
       blocked = true;
-      msg = `הזמנות לתאריך הזה נסגרו. ניתן להזמין עד ${formatDeadline(deadline)}.`;
+      msg = `הזמנות לתאריך הזה נסגרו. ניתן להזמין עד ${formatDeadline(getOrderDeadline(dateStr))}.`;
     }
   }
 
@@ -435,28 +404,28 @@ function updateRulesUI(){
 }
 
 /* =======================
-   שליחת הזמנה (מאפים)
+   שליחה לוואטסאפ (מאפים)
    ======================= */
 function sendOrder(){
-  const name  = getVal("custName").trim();
-  const phone = getVal("custPhone").trim();
-  const dateStr = getVal("pickupDate");
-  const pickupLocation = getVal("pickupLocation");
-  const notes = getVal("notes").trim();
+  const name  = val("custName").trim();
+  const phone = val("custPhone").trim();
+  const dateStr = val("pickupDate");
+  const pickupLocation = val("pickupLocation");
+  const notes = val("notes").trim();
 
   if(!name){ alert("נא למלא שם מלא"); return; }
   if(phone.length < 7){ alert("נא למלא מספר טלפון תקין"); return; }
   if(!dateStr){ alert("נא לבחור תאריך איסוף"); return; }
   if(!pickupLocation){ alert("נא לבחור נקודת איסוף"); return; }
 
-  updateMuffinInlineWarnings();
+  updateMuffinWarnings();
   updateRulesUI();
-  if(document.getElementById("sendBtn")?.disabled) return;
+  if($("sendBtn")?.disabled) return;
 
-  // מיקס לחמניות — חובה לבחור קמח אם יש כמות
-  const mixQty = parseInt(document.getElementById("qty_mix_rolls")?.value, 10) || 0;
+  // מיקס לחמניות: חייב קמח
+  const mixQty = parseInt($("qty_mix_rolls")?.value, 10) || 0;
   if(mixQty > 0){
-    const flour = getVal("flour_mix_rolls");
+    const flour = val("flour_mix_rolls");
     if(!flour){
       alert("בחרי קמח למיקס לחמניות (לבן / כוסמין)");
       return;
@@ -468,64 +437,54 @@ function sendOrder(){
     return;
   }
 
-  // גיבוי נוסף לחוק מאפינס
-  const violations = getMuffinViolations();
-  if(violations.length){
-    alert(`מינימום הזמנה למאפינס הוא ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם. חסר לך בטעם: "${violations[0].label}".`);
+  const v = muffinViolations();
+  if(v.length){
+    alert(`מינימום הזמנה למאפינס הוא ${MUFFIN_MIN_PER_FLAVOR} יח׳ מאותו הטעם. חסר לך בטעם: "${v[0].label}".`);
     return;
   }
 
-  let message = "הזמנה חדשה:\n\n";
+  let msg = "הזמנה חדשה:\n\n";
 
   PRODUCTS.forEach(p=>{
-    const qty = parseInt(document.getElementById("qty_"+p.id)?.value, 10) || 0;
-    if(qty > 0){
+    const q = parseInt($(`qty_${p.id}`)?.value, 10) || 0;
+    if(q > 0){
       if(p.type === "mix"){
-        const flour = getVal("flour_mix_rolls");
-        message += `${p.name} x${qty} (${flour})\n`;
+        msg += `${p.name} x${q} (${val("flour_mix_rolls")})\n`;
       } else {
-        message += `${p.name} x${qty}\n`;
+        msg += `${p.name} x${q}\n`;
       }
     }
   });
 
-  MUFFIN_GROUPS.forEach(group=>{
-    const chosen = group.options
-      .filter(opt => opt.available !== false)
-      .map(opt => {
-        const qty = parseInt(document.getElementById("qty_"+opt.id)?.value, 10) || 0;
-        return qty > 0 ? `${opt.label} x${qty}` : null;
+  MUFFIN_GROUPS.forEach(g=>{
+    const chosen = g.options
+      .filter(o=>o.available!==false)
+      .map(o=>{
+        const q = parseInt($(`qty_${o.id}`)?.value, 10) || 0;
+        return q > 0 ? `${o.label} x${q}` : null;
       })
       .filter(Boolean);
 
     if(chosen.length){
-      message += `\n${group.title}:\n- ${chosen.join("\n- ")}\n`;
+      msg += `\n${g.title}:\n- ${chosen.join("\n- ")}\n`;
     }
   });
 
-  message += `\nשם: ${name}\n`;
-  message += `טלפון: ${phone}\n`;
-  message += `נקודת איסוף: ${pickupLocation}\n`;
-  message += `תאריך איסוף: ${dateStr}\n`;
-  if(notes) message += `הערות: ${notes}\n`;
+  msg += `\nשם: ${name}\nטלפון: ${phone}\nנקודת איסוף: ${pickupLocation}\nתאריך איסוף: ${dateStr}\n`;
+  if(notes) msg += `הערות: ${notes}\n`;
 
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
 }
 
 /* =======================
    INIT
    ======================= */
-buildCards();
+buildProductsAndMuffins();
 renderWorkshops();
 calcTotal();
-updateMuffinInlineWarnings();
+updateMuffinWarnings();
 updateRulesUI();
 
-const sendBtn = document.getElementById("sendBtn");
-if(sendBtn) sendBtn.addEventListener("click", sendOrder);
-
-const loc = document.getElementById("pickupLocation");
-if(loc) loc.addEventListener("change", updateRulesUI);
-
-const dateEl = document.getElementById("pickupDate");
-if(dateEl) dateEl.addEventListener("change", updateRulesUI);
+$("sendBtn")?.addEventListener("click", sendOrder);
+$("pickupLocation")?.addEventListener("change", updateRulesUI);
+$("pickupDate")?.addEventListener("change", updateRulesUI);

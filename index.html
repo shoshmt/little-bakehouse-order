@@ -70,6 +70,17 @@ header::after{
   z-index:1;
 }
 
+/* חדש: שורת כשרות */
+.sub-note{
+  font-size:14px;
+  color:#6f5a48;
+  margin-top:8px;
+  font-weight:300;
+  position:relative;
+  z-index:1;
+  line-height:1.6;
+}
+
 .wheat-divider{
   margin-top:20px;
   display:flex;
@@ -206,6 +217,37 @@ input, textarea{
   color:#6b2d1a;
   display:none;
 }
+
+/* סדנאות */
+.section-title{
+  margin:46px 0 14px;
+  text-align:center;
+  font-size:28px;
+  font-weight:600;
+  color:#6a3d1f;
+}
+
+.section-text{
+  text-align:center;
+  max-width:820px;
+  margin:0 auto 18px;
+  color:#6f5a48;
+  line-height:1.8;
+  font-size:15px;
+}
+
+.ws-btn{
+  margin-top:12px;
+  width:100%;
+  padding:12px 14px;
+  border:none;
+  border-radius:14px;
+  background:#6a3d1f;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+.ws-btn:hover{ background:#5a3218; }
 </style>
 </head>
 
@@ -215,6 +257,8 @@ input, textarea{
   <h1 class="main-title">בית המאפה הקטן בדולב</h1>
   <img class="logo" src="logo-new.jpg" alt="logo" />
   <div class="sub-title">מאפיית בוטיק למאפי מחמצת</div>
+  <div class="sub-note">כל המוצרים נאפים במטבח ביתי כשר. מופרש בצק כדין.</div>
+
   <div class="wheat-divider">
     <svg viewBox="0 0 300 40">
       <g stroke="#b68b5e" stroke-width="1.5" fill="none">
@@ -227,8 +271,17 @@ input, textarea{
 
 <main>
 
+  <!-- מוצרים -->
   <div class="grid" id="products"></div>
 
+  <!-- סדנאות -->
+  <h2 class="section-title">סדנאות מחמצת</h2>
+  <div class="section-text">
+    סדנאות חווייתיות באווירה כפרית: פיצות מחמצת בטאבון, הכנת כיכר לחם, והבנה ברורה של תהליך המחמצת — בקצב נעים ועם המון טיפים.
+  </div>
+  <div class="grid" id="workshops"></div>
+
+  <!-- פרטי הזמנה -->
   <div class="box">
     <h2>פרטי הזמנה</h2>
 
@@ -256,11 +309,10 @@ input, textarea{
       הזמנות מתקבלות עד יומיים מראש.<br>
       להזמנה ליום שני – ניתן להזמין עד יום ראשון בשעה 12:00 בצהריים.
     </div>
-
   </div>
 
 </main>
 
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

@@ -210,6 +210,7 @@ function buildCards(){
       <img src="${p.img}" alt="${p.name}">
       <div class="name">${p.name}</div>
       <div class="price">₪${p.price}</div>
+      <div style="color:#7a6653;font-size:13px;">חלבי</div>
       ${p.dairy ? '<div style="color:#7a6653;font-size:13px;">חלבי</div>' : ''}
       ${extra}
       <div class="row" style="margin-top:10px;">

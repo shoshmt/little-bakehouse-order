@@ -27,9 +27,7 @@ header{
 header::after{
   content:"";
   position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
+  left:0; right:0; bottom:0;
   height:110px;
   pointer-events:none;
   background:linear-gradient(
@@ -41,13 +39,23 @@ header::after{
 }
 
 .main-title{
-  margin:0 0 25px 0;
+  margin:0 0 20px 0;
   font-size:56px;
   font-weight:600;
   color:#6a3d1f;
   letter-spacing:1.5px;
   position:relative;
   z-index:1;
+}
+
+.sub-note{
+  font-size:20px;
+  color:#4e2f1e;
+  margin:0 0 22px 0;
+  font-weight:500;
+  position:relative;
+  z-index:1;
+  line-height:1.6;
 }
 
 .logo{
@@ -70,16 +78,6 @@ header::after{
   margin-top:10px;
   position:relative;
   z-index:1;
-}
-
-.sub-note{
-  font-size:20px;
-  color:#4e2f1e;
-  margin-top:8px;
-  font-weight:500;
-  position:relative;
-  z-index:1;
-  line-height:1.6;
 }
 
 .wheat-divider{
@@ -116,35 +114,15 @@ main{
   box-shadow:0 8px 20px rgba(0,0,0,0.06);
 }
 
-/* מוצרים */
-#products .card img{
+.card img{
   width:100%;
-  height:180px;
-  object-fit:cover;
   border-radius:16px;
   margin-bottom:12px;
   display:block;
 }
 
-/* סדנאות */
-#workshops .card img{
-  width:100%;
-  height:auto;
-  border-radius:16px;
-  margin-bottom:12px;
-  display:block;
-}
-
-.name{
-  font-weight:600;
-  font-size:18px;
-}
-
-.price{
-  color:#8c5a2b;
-  font-weight:700;
-  margin:8px 0;
-}
+.name{ font-weight:600; font-size:18px; }
+.price{ color:#8c5a2b; font-weight:700; margin:8px 0; }
 
 .row{
   display:flex;
@@ -153,8 +131,7 @@ main{
   gap:10px;
 }
 
-select,
-input[type="number"]{
+select, input[type="number"]{
   padding:8px;
   border-radius:10px;
   border:1px solid #dbc7b5;
@@ -175,8 +152,7 @@ input[type="number"]{
   box-shadow:0 8px 22px rgba(0,0,0,0.06);
 }
 
-input,
-textarea{
+input, textarea{
   width:100%;
   margin-top:10px;
   padding:12px;
@@ -216,9 +192,7 @@ textarea{
   cursor:pointer;
 }
 
-.btn:hover{
-  background:#5f3821;
-}
+.btn:hover{ background:#5f3821; }
 
 .btn:disabled{
   opacity:0.6;
@@ -272,10 +246,7 @@ textarea{
   font-weight:700;
   cursor:pointer;
 }
-
-.ws-btn:hover{
-  background:#5a3218;
-}
+.ws-btn:hover{ background:#5a3218; }
 </style>
 </head>
 
@@ -283,9 +254,9 @@ textarea{
 
 <header>
   <h1 class="main-title">בית המאפה הקטן בדולב</h1>
+  <div class="sub-note">כל המוצרים נאפים במטבח ביתי כשר. מופרש בצק כדין.</div>
   <img class="logo" src="logo-new.jpg" alt="logo" />
   <div class="sub-title">מאפיית בוטיק למאפי מחמצת</div>
-  <div class="sub-note">כל המוצרים נאפים במטבח ביתי כשר. מופרש בצק כדין.</div>
 
   <div class="wheat-divider">
     <svg viewBox="0 0 300 40">
@@ -298,14 +269,18 @@ textarea{
 </header>
 
 <main>
+
+  <!-- מוצרים -->
   <div class="grid" id="products"></div>
 
+  <!-- סדנאות -->
   <h2 class="section-title">סדנאות מחמצת</h2>
   <div class="section-text">
     סדנאות חווייתיות באווירה כפרית: פיצות מחמצת בטאבון, הכנת כיכר לחם, והבנה ברורה של תהליך המחמצת — בקצב נעים ועם המון טיפים.
   </div>
   <div class="grid" id="workshops"></div>
 
+  <!-- פרטי הזמנה -->
   <div class="box">
     <h2>פרטי הזמנה</h2>
 
@@ -334,8 +309,9 @@ textarea{
       להזמנה ליום שני – ניתן להזמין עד יום ראשון בשעה 12:00 בצהריים.
     </div>
   </div>
+
 </main>
 
-<script src="app.js?v=6"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>

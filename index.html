@@ -127,8 +127,35 @@ main{
   object-fit:cover;
 }
 
-.name{ font-weight:600; font-size:18px; }
-.price{ color:#8c5a2b; font-weight:700; margin:8px 0; }
+/* אנימציה עדינה לכרטיסי המוצרים בלבד */
+#products .card{
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  overflow:hidden;
+}
+
+#products .card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+}
+
+#products .card img{
+  transition: transform 0.4s ease;
+}
+
+#products .card:hover img{
+  transform: scale(1.05);
+}
+
+.name{ 
+  font-weight:600; 
+  font-size:18px; 
+}
+
+.price{ 
+  color:#8c5a2b; 
+  font-weight:700; 
+  margin:8px 0; 
+}
 
 .row{
   display:flex;
@@ -198,7 +225,9 @@ input, textarea{
   cursor:pointer;
 }
 
-.btn:hover{ background:#5f3821; }
+.btn:hover{ 
+  background:#5f3821; 
+}
 
 .btn:disabled{
   opacity:0.6;
@@ -252,7 +281,10 @@ input, textarea{
   font-weight:700;
   cursor:pointer;
 }
-.ws-btn:hover{ background:#5a3218; }
+
+.ws-btn:hover{ 
+  background:#5a3218; 
+}
 </style>
 </head>
 

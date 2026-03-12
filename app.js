@@ -22,7 +22,17 @@ const PRODUCTS = [
 
   { id:"mix_rolls",     name:"מיקס לחמניות מחמצת",       price:45, img:"rolls-mix.jpg",     kind:"bread" },
 
-  // וופל חלבּי — מארז 4 (כעת גם דורש בחירת קמח)
+  // מוצר חדש: בסיסי פיצה — בלי בחירת קמח
+  {
+    id:"pizza_bases",
+    name:"בסיסי בצק מחמצת לפיצה – מארז 4 יח׳",
+    price:60,
+    img:"pizza-bases.jpg",
+    kind:"pizza",
+    desc:"בסיס לפיצה מוכן לעבודה: משטחים, מוסיפים רוטב ותוספות לפי מה שאוהבים, ואופים בתנור הביתי על החום הכי גבוה או בטאבון פיצה."
+  },
+
+  // וופל חלבי — מארז 4 (עם בחירת קמח)
   { id:"waffle_pack",   name:"וופל בלגי מחמצת – מארז 4 יח׳", price:60, img:"waffle-belgian.jpg", kind:"bread", dairy:true },
 ];
 
@@ -165,6 +175,7 @@ function updateMuffinWarnings(){
 
 /* =======================
    קמח לכל לחם: חובה לבחור אם יש כמות
+   (רק kind === "bread")
    ======================= */
 function breadFlourViolations(){
   const bad = [];
@@ -205,7 +216,7 @@ function buildProductsAndMuffins(){
     const card = document.createElement("div");
     card.className = "card";
 
-    // בחירת קמח לכל לחם
+    // בחירת קמח רק למוצרים מסוג bread
     const flourSelect = (p.kind === "bread") ? `
       <select id="flour_${p.id}">
         <option value="">בחירת קמח…</option>
@@ -218,7 +229,8 @@ function buildProductsAndMuffins(){
       <img src="${p.img}" alt="${p.name}">
       <div class="name">${p.name}</div>
       <div class="price">₪${p.price}</div>
-      ${p.dairy ? '<div style="color:#7a6653;font-size:13px;">חלבי</div>' : ''}
+      ${p.desc ? `<div style="color:#6b5442; line-height:1.6; font-size:14px; margin-top:6px;">${p.desc}</div>` : ''}
+      ${p.dairy ? '<div style="color:#7a6653;font-size:13px; margin-top:8px;">חלבי</div>' : ''}
       ${flourSelect}
       <div class="row" style="margin-top:10px;">
         <div style="color:#7a6653;font-size:13px;">כמות</div>
@@ -392,7 +404,7 @@ function updateRulesUI(){
     }
   }
 
-  // 4) חובה לבחור קמח לכל לחם שנבחר (כולל וופל עכשיו)
+  // 4) חובה לבחור קמח לכל לחם שנבחר
   if(!blocked){
     const badBreads = breadFlourViolations();
     if(badBreads.length){
@@ -450,12 +462,16 @@ function sendOrder(){
 
   let msg = "הזמנה חדשה:\n\n";
 
-  // מוצרים רגילים + קמח ללחמים
+  // מוצרים רגילים
   PRODUCTS.forEach(p=>{
     const q = parseInt($(`qty_${p.id}`)?.value, 10) || 0;
     if(q > 0){
-      const flour = val(`flour_${p.id}`); // כעת לכל לחם יש בחירת קמח
-      msg += `${p.name} x${q} (${flour})\n`;
+      if(p.kind === "bread"){
+        const flour = val(`flour_${p.id}`);
+        msg += `${p.name} x${q} (${flour})\n`;
+      } else {
+        msg += `${p.name} x${q}\n`;
+      }
     }
   });
 
@@ -493,3 +509,327 @@ updateRulesUI();
 $("sendBtn")?.addEventListener("click", sendOrder);
 $("pickupLocation")?.addEventListener("change", updateRulesUI);
 $("pickupDate")?.addEventListener("change", updateRulesUI);
+
+
+זה הapp.js הנוכחי המעודכן שלי.
+
+הקבצים index.html העדכניים שלי הם:
+
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>בית המאפה הקטן בדולב</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:'Assistant', sans-serif;
+  background:url("./site-bg.jpg") center/cover fixed no-repeat;
+  color:#3e2f23;
+}
+
+/* HEADER */
+header{
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+  padding:100px 20px 60px;
+  background:url("./header-bg.jpg") center/cover no-repeat;
+}
+
+header::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:110px;
+  pointer-events:none;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0) 40%,
+    rgba(248,240,230,1) 100%
+  );
+}
+
+.main-title{
+  margin:0 0 25px 0;
+  font-size:56px;
+  font-weight:600;
+  color:#6a3d1f;
+  letter-spacing:1.5px;
+  position:relative;
+  z-index:1;
+}
+
+.logo{
+  width:240px;
+  height:240px;
+  object-fit:cover;
+  border-radius:30px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.18);
+  margin:0 auto 20px;
+  display:block;
+  background:#fffaf3;
+  position:relative;
+  z-index:1;
+}
+
+.sub-title{
+  font-size:35px;
+  font-weight:400;
+  color:#4e2f1e;
+  margin-top:10px;
+  position:relative;
+  z-index:1;
+}
+
+/* חדש: שורת כשרות */
+.sub-note{
+  font-size:20px;
+  color:#4e2f1e;
+  margin-top:8px;
+  font-weight:500;
+  position:relative;
+  z-index:1;
+  line-height:1.6;
+}
+
+.wheat-divider{
+  margin-top:20px;
+  display:flex;
+  justify-content:center;
+  position:relative;
+  z-index:1;
+}
+
+.wheat-divider svg{
+  width:180px;
+  opacity:0.85;
+}
+
+/* CONTENT */
+main{
+  max-width:1000px;
+  margin:0 auto;
+  padding:40px 16px 80px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap:20px;
+}
+
+.card{
+  background:#fffaf3;
+  border:1px solid #f0e2d4;
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.06);
+}
+
+.card img{
+  width:100%;
+  border-radius:16px;
+  margin-bottom:12px;
+  display:block;
+}
+
+.name{ font-weight:600; font-size:18px; }
+.price{ color:#8c5a2b; font-weight:700; margin:8px 0; }
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+select, input[type="number"]{
+  padding:8px;
+  border-radius:10px;
+  border:1px solid #dbc7b5;
+  font-family:inherit;
+  background:#fff;
+}
+
+.row input[type="number"]{
+  width:120px;
+  text-align:center;
+}
+
+.box{
+  margin-top:40px;
+  background:#fffaf3;
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 8px 22px rgba(0,0,0,0.06);
+}
+
+input, textarea{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #dbc7b5;
+  font-family:inherit;
+  background:#fff;
+  box-sizing:border-box;
+}
+
+.box select{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #dbc7b5;
+  font-family:inherit;
+  background:#fff;
+  box-sizing:border-box;
+}
+
+.total{
+  margin-top:15px;
+  font-weight:800;
+  font-size:20px;
+}
+
+.btn{
+  margin-top:15px;
+  padding:14px;
+  width:100%;
+  border:none;
+  border-radius:14px;
+  background:#7a4b2c;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.btn:hover{ background:#5f3821; }
+
+.btn:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+
+.hint{
+  margin-top:14px;
+  font-size:14px;
+  text-align:center;
+  color:#7a6653;
+  line-height:1.7;
+}
+
+.rule{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:#fff1e6;
+  border:1px solid #f0c9b0;
+  color:#6b2d1a;
+  display:none;
+}
+
+/* סדנאות */
+.section-title{
+  margin:46px 0 14px;
+  text-align:center;
+  font-size:28px;
+  font-weight:600;
+  color:#6a3d1f;
+}
+
+.section-text{
+  text-align:center;
+  max-width:820px;
+  margin:0 auto 18px;
+  color:#6f5a48;
+  line-height:1.8;
+  font-size:15px;
+}
+
+.ws-btn{
+  margin-top:12px;
+  width:100%;
+  padding:12px 14px;
+  border:none;
+  border-radius:14px;
+  background:#6a3d1f;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+.ws-btn:hover{ background:#5a3218; }
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1 class="main-title">בית המאפה הקטן בדולב</h1>
+  <img class="logo" src="logo-new.jpg" alt="logo" />
+  <div class="sub-title">מאפיית בוטיק למאפי מחמצת</div>
+  <div class="sub-note">כל המוצרים נאפים במטבח ביתי כשר. מופרש בצק כדין.</div>
+
+  <div class="wheat-divider">
+    <svg viewBox="0 0 300 40">
+      <g stroke="#b68b5e" stroke-width="1.5" fill="none">
+        <line x1="20" y1="20" x2="120" y2="20"/>
+        <line x1="180" y1="20" x2="280" y2="20"/>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<main>
+
+  <!-- מוצרים -->
+  <div class="grid" id="products"></div>
+
+  <!-- סדנאות -->
+  <h2 class="section-title">סדנאות מחמצת</h2>
+  <div class="section-text">
+    סדנאות חווייתיות באווירה כפרית: פיצות מחמצת בטאבון, הכנת כיכר לחם, והבנה ברורה של תהליך המחמצת — בקצב נעים ועם המון טיפים.
+  </div>
+  <div class="grid" id="workshops"></div>
+
+  <!-- פרטי הזמנה -->
+  <div class="box">
+    <h2>פרטי הזמנה</h2>
+
+    <input id="custName" placeholder="שם מלא">
+    <input id="custPhone" placeholder="טלפון">
+    <input id="pickupDate" type="date">
+
+    <select id="pickupLocation">
+      <option value="">בחירת נקודת איסוף…</option>
+      <option value="דולב">דולב — להזמין מראש. אין איסוף לחמים ביום ראשון</option>
+      <option value="בית שמש">בית שמש — בית משפחת מוריס (יש לברר בפרטי את יום האיסוף)</option>
+      <option value="גבעות עדן">גבעות עדן — בית משפחת מוריס (יונתן ואליטל)</option>
+    </select>
+
+    <div class="rule" id="ruleMsg"></div>
+
+    <textarea id="notes" placeholder="הערות להזמנה"></textarea>
+
+    <div class="total">סה״כ: ₪<span id="total">0</span></div>
+    <button class="btn" id="sendBtn" type="button">שליחת הזמנה ב-WhatsApp</button>
+
+    <div class="hint">
+      אני אופה במיוחד לכל הזמנה ✨<br>
+      כיכר לחם מחמצת עוברת תהליך של כ־48 שעות הכנה.<br>
+      הזמנות מתקבלות עד יומיים מראש.<br>
+      להזמנה ליום שני – ניתן להזמין עד יום ראשון בשעה 12:00 בצהריים.
+    </div>
+  </div>
+
+</main>
+
+<script src="app.js?v=5"></script>
+</body>
+</html>
